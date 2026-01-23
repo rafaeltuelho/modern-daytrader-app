@@ -1,51 +1,160 @@
-# sample.daytrader7 [![Build Status](https://travis-ci.org/WASdev/sample.daytrader7.svg?branch=master)](https://travis-ci.org/WASdev/sample.daytrader7)
+# 📈 DayTrader - Modern Stock Trading Application
 
-# Java EE7: DayTrader7 Sample
+![Quarkus](https://img.shields.io/badge/Quarkus-3.30.7-blue?logo=quarkus)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)
+![Java](https://img.shields.io/badge/Java-21-orange?logo=openjdk)
+![License](https://img.shields.io/badge/License-Apache%202.0-green)
 
-Java EE7 DayTrader7 Sample
+## Overview
 
+DayTrader is a **modernized stock trading benchmark application** originally developed by IBM. This version has been completely re-architected from Java EE7/WebSphere Liberty to a modern cloud-native stack featuring **Quarkus** on the backend and **React** on the frontend.
 
-This sample contains the DayTrader 7 benchmark, which is an application built around the paradigm of an online stock trading system. The application allows users to login, view their portfolio, lookup stock quotes, and buy or sell stock shares. With the aid of a Web-based load driver such as Apache JMeter, the real-world workload provided by DayTrader can be used to measure and compare the performance of Java Platform, Enterprise Edition (Java EE) application servers offered by a variety of vendors. In addition to the full workload, the application also contains a set of primitives used for functional and performance testing of various Java EE components and common design patterns.
+The application simulates an online stock trading system where users can register, manage portfolios, buy and sell stocks, and track market activity.
 
-DayTrader is an end-to-end benchmark and performance sample application. It provides a real world Java EE workload. DayTrader's new design spans Java EE 7, including the new WebSockets specification. Other Java EE features include JSPs, Servlets, EJBs, JPA, JDBC, JSF, CDI, Bean Validation, JSON, JMS, MDBs, and transactions (synchronous and asynchronous/2-phase commit).
+---
 
-This sample can be installed onto WAS Liberty runtime versions 8.5.5.6 and later. A prebuilt derby database is provided in resources/data
+## 🛠️ Technology Stack
 
-To run this sample, first [download](https://github.com/WASdev/sample.daytrader7/archive/master.zip) or clone this repo - to clone:
+| Layer | Technology | Description |
+|-------|------------|-------------|
+| **Backend** | [Quarkus 3.30](https://quarkus.io/) | Supersonic Subatomic Java framework |
+| | [Hibernate Panache](https://quarkus.io/guides/hibernate-orm-panache) | Simplified ORM with active record pattern |
+| | [PostgreSQL](https://www.postgresql.org/) | Relational database |
+| | [SmallRye JWT](https://smallrye.io/smallrye-jwt/) | JWT-based authentication |
+| | [Flyway](https://flywaydb.org/) | Database migrations |
+| | [SmallRye OpenAPI](https://quarkus.io/guides/openapi-swaggerui) | API documentation |
+| **Frontend** | [React 19](https://react.dev/) | UI component library |
+| | [TypeScript 5.9](https://www.typescriptlang.org/) | Type-safe JavaScript |
+| | [Vite 7](https://vitejs.dev/) | Next-generation build tool |
+| | [TailwindCSS 4](https://tailwindcss.com/) | Utility-first CSS framework |
+| | [TanStack Query](https://tanstack.com/query) | Async state management |
+| | [React Router 7](https://reactrouter.com/) | Client-side routing |
+
+---
+
+## 📋 Prerequisites
+
+- **Java 21** (OpenJDK or GraalVM)
+- **Node.js 18+** with npm
+- **Docker** (optional, for PostgreSQL)
+- **Maven 3.9+** (or use included wrapper)
+
+---
+
+## 🚀 Quick Start
+
+### 1. Start the Database
+
+```bash
+cd daytrader-quarkus
+docker-compose up -d
 ```
-git clone git@github.com:WASdev/sample.daytrader7.git
+
+### 2. Start the Backend
+
+```bash
+cd daytrader-quarkus
+./mvnw quarkus:dev
 ```
 
-From inside the sample.daytrader7 directory, build and start the application in Open Liberty with the following command:
-```
-mvn install
-cd daytrader-ee7
-mvn liberty:run
-```
+The backend starts at **http://localhost:8080**
 
-Once the server has been started, go to [http://localhost:9082/daytrader](http://localhost:9082/daytrader) to interact with the sample.
+### 3. Start the Frontend
 
-### To containerize the application with DB2, you can run command 
-```
-docker build -t sample-daytrader7 -f Containerfile_db2 .
+```bash
+cd daytrader-frontend
+npm install
+npm run dev
 ```
 
-## Notice
+The frontend starts at **http://localhost:5173**
 
-© Copyright IBM Corporation 2015.
+---
 
-## License
+## 📁 Project Structure
 
-```text
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+```
+sample-daytrader7/
+├── daytrader-quarkus/        # Backend - Quarkus REST API
+│   ├── src/main/java/        # Java source code
+│   ├── src/main/resources/   # Configuration & migrations
+│   ├── docker-compose.yml    # PostgreSQL container
+│   └── pom.xml               # Maven configuration
+│
+├── daytrader-frontend/       # Frontend - React SPA
+│   ├── src/
+│   │   ├── api/              # API client layer
+│   │   ├── components/       # Reusable UI components
+│   │   ├── context/          # React context providers
+│   │   ├── hooks/            # Custom React hooks
+│   │   ├── pages/            # Page components
+│   │   └── types/            # TypeScript type definitions
+│   └── package.json          # npm configuration
+│
+├── docs/                     # Documentation
+├── jmeter_files/             # Load testing scripts
+└── README.md                 # This file
+```
 
-    http://www.apache.org/licenses/LICENSE-2.0
+---
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-````
+## 📖 API Documentation
+
+Once the backend is running, access the interactive API documentation:
+
+- **Swagger UI**: [http://localhost:8080/swagger-ui](http://localhost:8080/swagger-ui)
+- **OpenAPI Spec**: [http://localhost:8080/openapi](http://localhost:8080/openapi)
+
+---
+
+## 🔐 Test Accounts
+
+The application comes with pre-configured test accounts for development:
+
+| Username | Password | Description |
+|----------|----------|-------------|
+| `uid:0` | `xxx` | Test user 0 |
+| `uid:1` | `xxx` | Test user 1 |
+| `uid:2` | `xxx` | Test user 2 |
+
+---
+
+## 📚 Documentation
+
+Additional documentation is available in the [`docs/`](./docs/) folder:
+
+- Architecture overview
+- API design decisions
+- Deployment guides
+- Development guidelines
+
+---
+
+## 🧪 Running Tests
+
+### Backend Tests
+
+```bash
+cd daytrader-quarkus
+./mvnw test
+```
+
+### Frontend Linting
+
+```bash
+cd daytrader-frontend
+npm run lint
+```
+
+---
+
+## 📝 License
+
+This project is licensed under the **Apache License 2.0** - see the [LICENSE](./LICENSE) file for details.
+
+---
+
+<p align="center">
+  <sub>Originally developed by IBM • Modernized with ❤️ using Quarkus & React</sub>
+</p>
