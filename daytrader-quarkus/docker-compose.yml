@@ -1,0 +1,80 @@
+# =============================================================================
+# DayTrader Local Development - Docker Compose
+# =============================================================================
+# 
+# This docker-compose file provides a local PostgreSQL instance for development.
+# 
+# Usage:
+#   Start:   docker-compose up -d
+#   Stop:    docker-compose down
+#   Logs:    docker-compose logs -f postgres
+#   Reset:   docker-compose down -v  (removes all data)
+#
+# The database will be available at:
+#   Host: localhost
+#   Port: 5432
+#   Database: daytraderdb
+#   Username: daytrader
+#   Password: daytrader
+#
+# Note: Quarkus Dev Services can also auto-start PostgreSQL in dev mode.
+#       Use this docker-compose for manual control or production-like testing.
+# =============================================================================
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: daytrader-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: daytraderdb
+      POSTGRES_USER: daytrader
+      POSTGRES_PASSWORD: daytrader
+      # Performance tuning for development
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persist data between restarts
+      - daytrader_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U daytrader -d daytraderdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - daytrader-network
+
+  # Optional: pgAdmin for database management UI
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: daytrader-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@daytrader.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - daytrader_pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - daytrader-network
+    profiles:
+      - admin  # Only starts with: docker-compose --profile admin up
+
+volumes:
+  daytrader_postgres_data:
+    driver: local
+  daytrader_pgadmin_data:
+    driver: local
+
+networks:
+  daytrader-network:
+    driver: bridge
+

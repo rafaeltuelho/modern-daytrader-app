@@ -1,0 +1,13 @@
+{
+  "version" : "v1",
+  "lastUpdate" : "23/01/2026 15:12:03",
+  "plugins" : {
+    "tls" : {
+      "name" : "tls",
+      "type" : "extension",
+      "location" : "io.quarkus:quarkus-tls-registry-cli:3.30.8",
+      "description" : null,
+      "inProjectCatalog" : false
+    }
+  }
+}
