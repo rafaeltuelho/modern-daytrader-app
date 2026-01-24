@@ -58,9 +58,9 @@ node --version
 npm --version
 ```
 
-### Docker (Optional)
+### Docker
 
-Docker is optional but useful for running PostgreSQL manually.
+Docker is required for Quarkus Dev Services to automatically start PostgreSQL.
 
 Install from [Docker Desktop](https://www.docker.com/products/docker-desktop/) or via package manager.
 
@@ -68,9 +68,26 @@ Install from [Docker Desktop](https://www.docker.com/products/docker-desktop/) o
 
 ## Database Setup
 
-### Option 1: Docker Compose
+### Dev Mode (Automatic)
 
-Start PostgreSQL manually with Docker Compose:
+**Quarkus Dev Services automatically starts a PostgreSQL container** when you run the application in dev mode. No manual database setup required!
+
+Simply run the backend and Quarkus handles everything:
+```bash
+cd daytrader-quarkus
+./mvnw quarkus:dev
+```
+
+Quarkus will:
+- Start a PostgreSQL container automatically
+- Run Flyway migrations to create the schema
+- Seed initial test data
+
+> **Note:** Make sure Docker is running before starting the application.
+
+### Production Mode (Manual Setup)
+
+For production or non-dev mode deployments, you need to start PostgreSQL manually:
 
 ```bash
 cd daytrader-quarkus
@@ -98,18 +115,6 @@ docker-compose --profile admin up -d
 docker-compose down      # Stop containers
 docker-compose down -v   # Stop and remove all data
 ```
-
-### Option 2: Quarkus Dev Services (Recommended)
-
-Quarkus automatically starts a PostgreSQL container in dev mode. No manual setup required!
-
-Simply run the backend and Quarkus handles everything:
-```bash
-cd daytrader-quarkus
-./mvnw quarkus:dev
-```
-
-Dev Services uses the same credentials as Docker Compose.
 
 ---
 

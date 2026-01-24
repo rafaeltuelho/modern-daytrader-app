@@ -37,21 +37,14 @@ The application simulates an online stock trading system where users can registe
 
 - **Java 21** (OpenJDK or GraalVM)
 - **Node.js 18+** with npm
-- **Docker** (optional, for PostgreSQL)
+- **Docker** (required - used by Quarkus Dev Services)
 - **Maven 3.9+** (or use included wrapper)
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Start the Database
-
-```bash
-cd daytrader-quarkus
-docker-compose up -d
-```
-
-### 2. Start the Backend
+### 1. Start the Backend
 
 ```bash
 cd daytrader-quarkus
@@ -60,7 +53,9 @@ cd daytrader-quarkus
 
 The backend starts at **http://localhost:8080**
 
-### 3. Start the Frontend
+> **Note:** Quarkus Dev Services automatically starts a PostgreSQL container when you run in dev mode. No manual database setup is required! Just make sure Docker is running.
+
+### 2. Start the Frontend
 
 ```bash
 cd daytrader-frontend
