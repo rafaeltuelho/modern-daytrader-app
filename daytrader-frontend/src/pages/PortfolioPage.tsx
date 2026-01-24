@@ -1,23 +1,43 @@
 import { useState } from 'react';
 import { useHoldings, useSell, useQuotes } from '../hooks';
-import { HoldingCard, LoadingSpinner, ErrorAlert, SuccessAlert } from '../components';
+import { HoldingCard, LoadingSpinner, ErrorAlert, SuccessAlert, ConfirmModal } from '../components';
 
 export function PortfolioPage() {
   const { data: holdings, isLoading, error, refetch } = useHoldings();
   const { data: quotes } = useQuotes();
   const sellMutation = useSell();
   const [successMessage, setSuccessMessage] = useState('');
+  const [confirmSell, setConfirmSell] = useState<{ isOpen: boolean; holdingId: number | null; symbol: string }>({
+    isOpen: false,
+    holdingId: null,
+    symbol: '',
+  });
 
-  const handleSell = async (holdingId: number) => {
-    if (!confirm('Are you sure you want to sell this holding?')) return;
-    
+  const handleSellClick = (holdingId: number) => {
+    const holding = holdings?.find((h) => h.id === holdingId);
+    setConfirmSell({
+      isOpen: true,
+      holdingId,
+      symbol: holding?.quote?.symbol || 'this holding',
+    });
+  };
+
+  const handleConfirmSell = async () => {
+    if (confirmSell.holdingId === null) return;
+
     try {
-      await sellMutation.mutateAsync(holdingId);
+      await sellMutation.mutateAsync(confirmSell.holdingId);
       setSuccessMessage('Sale completed successfully!');
       refetch();
     } catch (err) {
       // Error is handled by mutation state
+    } finally {
+      setConfirmSell({ isOpen: false, holdingId: null, symbol: '' });
     }
+  };
+
+  const handleCancelSell = () => {
+    setConfirmSell({ isOpen: false, holdingId: null, symbol: '' });
   };
 
   // Enrich holdings with current prices from quotes
@@ -104,11 +124,23 @@ export function PortfolioPage() {
             <HoldingCard
               key={holding.holdingID}
               holding={holding}
-              onSell={handleSell}
+              onSell={handleSellClick}
             />
           ))}
         </div>
       )}
+
+      {/* Sell Confirmation Modal */}
+      <ConfirmModal
+        isOpen={confirmSell.isOpen}
+        title="Confirm Sale"
+        message={`Are you sure you want to sell your ${confirmSell.symbol} holding? This action cannot be undone.`}
+        confirmText="Sell"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={handleConfirmSell}
+        onCancel={handleCancelSell}
+      />
     </div>
   );
 }

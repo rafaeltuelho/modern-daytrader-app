@@ -20,4 +20,5 @@ export { TradeForm } from './TradeForm';
 export { LoadingSpinner } from './LoadingSpinner';
 export { ErrorAlert } from './ErrorAlert';
 export { SuccessAlert } from './SuccessAlert';
+export { ConfirmModal } from './ConfirmModal';
 

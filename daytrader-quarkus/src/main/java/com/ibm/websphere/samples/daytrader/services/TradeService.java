@@ -138,17 +138,17 @@ public class TradeService {
         // Credit account
         account.balance = account.balance.add(proceeds);
 
-        // Create sell order
+        // Remove holding first (before creating order that would reference it)
+        holding.delete();
+
+        // Create sell order (holding is null since it's been deleted)
         Order order = new Order("sell", "closed", new Timestamp(System.currentTimeMillis()),
                                new Timestamp(System.currentTimeMillis()), quantity,
-                               price, ORDER_FEE, account, quote, holding);
+                               price, ORDER_FEE, account, quote, null);
         order.persist();
 
         // Update quote volume
         quote.volume += quantity;
-
-        // Remove holding
-        holding.delete();
 
         return order;
     }
