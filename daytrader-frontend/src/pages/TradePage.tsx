@@ -54,7 +54,7 @@ export function TradePage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">Trade</h1>
+      <h1 className="text-3xl font-bold text-white">Trade</h1>
 
       {successMessage && (
         <SuccessAlert message={successMessage} onDismiss={() => setSuccessMessage('')} />
@@ -74,20 +74,20 @@ export function TradePage() {
 
       {/* Holdings Quick Reference for Selling */}
       {holdings && holdings.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Your Holdings</h2>
-          <p className="text-sm text-gray-600 mb-3">
-            To sell, go to your <a href="/portfolio" className="text-blue-600 hover:underline">Portfolio</a> and click Sell on the holding you want to sell.
+        <div className="bg-[#1A1A2E]/80 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+          <h2 className="text-lg font-semibold text-white mb-4">Your Holdings</h2>
+          <p className="text-sm text-gray-400 mb-3">
+            To sell, go to your <a href="/portfolio" className="text-purple-400 hover:text-purple-300 transition-colors">Portfolio</a> and click Sell on the holding you want to sell.
           </p>
           <div className="space-y-2">
             {holdings.slice(0, 5).map((holding) => (
-              <div key={holding.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                <span className="font-medium">{holding.quote?.symbol || 'Unknown'}</span>
-                <span className="text-gray-600">{holding.quantity} shares</span>
+              <div key={holding.id} className="flex justify-between items-center p-3 bg-[#16213E]/80 rounded-lg border border-white/5 hover:border-purple-500/20 transition-colors">
+                <span className="font-medium text-white">{holding.quote?.symbol || 'Unknown'}</span>
+                <span className="text-gray-400">{holding.quantity} shares</span>
               </div>
             ))}
             {holdings.length > 5 && (
-              <p className="text-sm text-gray-500 text-center">
+              <p className="text-sm text-gray-500 text-center pt-2">
                 +{holdings.length - 5} more holdings
               </p>
             )}

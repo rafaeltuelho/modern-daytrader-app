@@ -55,23 +55,33 @@ export function RegisterForm({ onSubmit, isLoading = false, error }: RegisterFor
     await onSubmit(formData);
   };
 
-  const inputClass = "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500";
-  const labelClass = "block text-sm font-medium text-gray-700 mb-1";
+  const inputClass = "w-full px-4 py-3 bg-[#16213E] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all";
+  const labelClass = "block text-sm font-medium text-gray-400 mb-2";
 
   return (
-    <div className="max-w-lg mx-auto">
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
+    <div className="max-w-xl mx-auto w-full">
+      <div className="bg-[#1A1A2E]/80 backdrop-blur-sm rounded-2xl p-8 border border-white/5 shadow-2xl">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
+            <span className="text-white font-bold text-lg">DT</span>
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-bold text-white text-center mb-2">
           Create Your Account
         </h2>
+        <p className="text-gray-400 text-center text-sm mb-6">
+          Start your trading journey today
+        </p>
 
         {(error || validationError) && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 text-red-400 rounded-lg text-sm">
             {error || validationError}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="userId" className={labelClass}>Username *</label>
@@ -124,14 +134,14 @@ export function RegisterForm({ onSubmit, isLoading = false, error }: RegisterFor
           </div>
 
           <button type="submit" disabled={isLoading}
-            className="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-purple-500 text-white font-semibold rounded-lg hover:from-purple-500 hover:to-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-[#0D0D0D] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40">
             {isLoading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-600">
+        <p className="mt-6 text-center text-sm text-gray-400">
           Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">Sign in</Link>
+          <Link to="/login" className="text-purple-400 hover:text-purple-300 font-medium transition-colors">Sign in</Link>
         </p>
       </div>
     </div>

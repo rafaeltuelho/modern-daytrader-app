@@ -15,10 +15,10 @@ interface TradeFormProps {
   initialAction?: 'buy' | 'sell';
 }
 
-export function TradeForm({ 
-  quotes, 
-  onSubmit, 
-  isLoading = false, 
+export function TradeForm({
+  quotes,
+  onSubmit,
+  isLoading = false,
   error,
   initialSymbol = '',
   initialAction = 'buy'
@@ -33,7 +33,7 @@ export function TradeForm({
     if (initialAction) setAction(initialAction);
   }, [initialSymbol, initialAction]);
 
-  const filteredQuotes = quotes.filter(q => 
+  const filteredQuotes = quotes.filter(q =>
     q.symbol.toLowerCase().includes(symbol.toLowerCase()) ||
     q.companyName.toLowerCase().includes(symbol.toLowerCase())
   ).slice(0, 5);
@@ -53,49 +53,53 @@ export function TradeForm({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-4">Place Trade</h2>
+    <div className="bg-[#1A1A2E]/80 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+      <h2 className="text-xl font-bold text-white mb-4">Place Trade</h2>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+        <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 text-red-400 rounded-lg">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         {/* Buy/Sell Toggle */}
-        <div className="flex rounded-lg overflow-hidden border border-gray-300">
+        <div className="flex rounded-lg overflow-hidden border border-white/10">
           <button type="button" onClick={() => setAction('buy')}
-            className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
-              action === 'buy' ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+            className={`flex-1 py-3 px-4 text-sm font-semibold transition-all ${
+              action === 'buy'
+                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20'
+                : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}>
             BUY
           </button>
           <button type="button" onClick={() => setAction('sell')}
-            className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
-              action === 'sell' ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+            className={`flex-1 py-3 px-4 text-sm font-semibold transition-all ${
+              action === 'sell'
+                ? 'bg-red-600 text-white shadow-lg shadow-red-500/20'
+                : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}>
             SELL
           </button>
         </div>
 
         {/* Symbol Input with Autocomplete */}
         <div className="relative">
-          <label htmlFor="symbol" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="symbol" className="block text-sm font-medium text-gray-400 mb-2">
             Stock Symbol
           </label>
           <input id="symbol" type="text" value={symbol}
             onChange={(e) => { setSymbol(e.target.value); setShowSuggestions(true); }}
             onFocus={() => setShowSuggestions(true)}
             onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 bg-[#16213E] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all"
             placeholder="Enter symbol (e.g., AAPL)" required />
-          
+
           {showSuggestions && symbol && filteredQuotes.length > 0 && (
-            <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-auto">
+            <ul className="absolute z-10 w-full mt-2 bg-[#16213E] border border-white/10 rounded-lg shadow-xl max-h-48 overflow-auto">
               {filteredQuotes.map((quote) => (
                 <li key={quote.symbol} onClick={() => handleSymbolSelect(quote.symbol)}
-                  className="px-3 py-2 hover:bg-blue-50 cursor-pointer flex justify-between">
-                  <span className="font-medium">{quote.symbol}</span>
-                  <span className="text-gray-500 text-sm truncate ml-2">{quote.companyName}</span>
+                  className="px-4 py-3 hover:bg-purple-500/20 cursor-pointer flex justify-between border-b border-white/5 last:border-0 transition-colors">
+                  <span className="font-medium text-white">{quote.symbol}</span>
+                  <span className="text-gray-400 text-sm truncate ml-2">{quote.companyName}</span>
                 </li>
               ))}
             </ul>
@@ -104,34 +108,36 @@ export function TradeForm({
 
         {/* Quantity Input */}
         <div>
-          <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="quantity" className="block text-sm font-medium text-gray-400 mb-2">
             Quantity
           </label>
           <input id="quantity" type="number" min="1" value={quantity}
             onChange={(e) => setQuantity(parseInt(e.target.value) || 0)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 bg-[#16213E] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all"
             required />
         </div>
 
         {/* Estimated Cost */}
         {selectedQuote && (
-          <div className="p-3 bg-gray-50 rounded-md">
+          <div className="p-4 bg-[#16213E]/80 rounded-lg border border-white/5">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Price per share:</span>
-              <span className="font-medium">${selectedQuote.price.toFixed(2)}</span>
+              <span className="text-gray-400">Price per share:</span>
+              <span className="font-medium text-white">${selectedQuote.price.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between text-sm mt-1">
-              <span className="text-gray-600">Estimated {action === 'buy' ? 'cost' : 'proceeds'}:</span>
-              <span className="font-bold text-lg">${estimatedCost.toFixed(2)}</span>
+            <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/5">
+              <span className="text-gray-400">Estimated {action === 'buy' ? 'cost' : 'proceeds'}:</span>
+              <span className={`font-bold text-xl ${action === 'buy' ? 'text-emerald-400' : 'text-red-400'}`}>
+                ${estimatedCost.toFixed(2)}
+              </span>
             </div>
           </div>
         )}
 
         <button type="submit" disabled={isLoading || !symbol || quantity <= 0}
-          className={`w-full py-3 px-4 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
-            action === 'buy' 
-              ? 'bg-green-500 hover:bg-green-600 text-white focus:ring-green-500'
-              : 'bg-red-500 hover:bg-red-600 text-white focus:ring-red-500'}`}>
+          className={`w-full py-4 px-4 font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0D0D0D] disabled:opacity-50 disabled:cursor-not-allowed transition-all ${
+            action === 'buy'
+              ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 focus:ring-emerald-500'
+              : 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white shadow-lg shadow-red-500/20 hover:shadow-red-500/40 focus:ring-red-500'}`}>
           {isLoading ? 'Processing...' : `${action === 'buy' ? 'Buy' : 'Sell'} ${quantity} ${symbol || 'shares'}`}
         </button>
       </form>

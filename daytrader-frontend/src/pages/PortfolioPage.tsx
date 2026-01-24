@@ -48,37 +48,37 @@ export function PortfolioPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">Portfolio</h1>
+      <h1 className="text-3xl font-bold text-white">Portfolio</h1>
 
       {successMessage && (
         <SuccessAlert message={successMessage} onDismiss={() => setSuccessMessage('')} />
       )}
 
       {sellMutation.error && (
-        <ErrorAlert 
-          message={(sellMutation.error as { message?: string })?.message || 'Failed to sell holding'} 
+        <ErrorAlert
+          message={(sellMutation.error as { message?: string })?.message || 'Failed to sell holding'}
         />
       )}
 
       {/* Portfolio Summary */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Portfolio Summary</h2>
+      <div className="bg-[#1A1A2E]/80 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+        <h2 className="text-xl font-semibold text-white mb-4">Portfolio Summary</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <p className="text-sm text-gray-600">Holdings</p>
-            <p className="text-2xl font-bold">{enrichedHoldings.length}</p>
+          <div className="p-4 bg-gradient-to-br from-purple-500/20 to-purple-600/10 rounded-xl border border-purple-500/20">
+            <p className="text-sm text-gray-400">Holdings</p>
+            <p className="text-2xl font-bold text-purple-400">{enrichedHoldings.length}</p>
           </div>
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-gray-600">Total Cost</p>
-            <p className="text-2xl font-bold text-blue-600">${totalCost.toFixed(2)}</p>
+          <div className="p-4 bg-gradient-to-br from-blue-500/20 to-blue-600/10 rounded-xl border border-blue-500/20">
+            <p className="text-sm text-gray-400">Total Cost</p>
+            <p className="text-2xl font-bold text-blue-400">${totalCost.toFixed(2)}</p>
           </div>
-          <div className="p-4 bg-green-50 rounded-lg">
-            <p className="text-sm text-gray-600">Market Value</p>
-            <p className="text-2xl font-bold text-green-600">${totalValue.toFixed(2)}</p>
+          <div className="p-4 bg-gradient-to-br from-teal-500/20 to-teal-600/10 rounded-xl border border-teal-500/20">
+            <p className="text-sm text-gray-400">Market Value</p>
+            <p className="text-2xl font-bold text-teal-400">${totalValue.toFixed(2)}</p>
           </div>
-          <div className={`p-4 rounded-lg ${totalGain >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
-            <p className="text-sm text-gray-600">Total Gain/Loss</p>
-            <p className={`text-2xl font-bold ${totalGain >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+          <div className={`p-4 rounded-xl border ${totalGain >= 0 ? 'bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border-emerald-500/20' : 'bg-gradient-to-br from-red-500/20 to-red-600/10 border-red-500/20'}`}>
+            <p className="text-sm text-gray-400">Total Gain/Loss</p>
+            <p className={`text-2xl font-bold ${totalGain >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
               {totalGain >= 0 ? '+' : ''}${totalGain.toFixed(2)}
               <span className="text-sm ml-1">
                 ({totalCost > 0 ? ((totalGain / totalCost) * 100).toFixed(2) : 0}%)
@@ -90,16 +90,21 @@ export function PortfolioPage() {
 
       {/* Holdings List */}
       {enrichedHoldings.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <p className="text-gray-500">No holdings yet. Start trading to build your portfolio!</p>
+        <div className="bg-[#1A1A2E]/80 backdrop-blur-sm rounded-xl p-8 text-center border border-white/5">
+          <div className="w-16 h-16 mx-auto mb-4 bg-purple-500/20 rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <p className="text-gray-400">No holdings yet. Start trading to build your portfolio!</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {enrichedHoldings.map((holding) => (
-            <HoldingCard 
-              key={holding.holdingID} 
-              holding={holding} 
-              onSell={handleSell} 
+            <HoldingCard
+              key={holding.holdingID}
+              holding={holding}
+              onSell={handleSell}
             />
           ))}
         </div>

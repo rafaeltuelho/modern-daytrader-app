@@ -56,41 +56,52 @@ export function QuotesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">Stock Quotes</h1>
+      <h1 className="text-3xl font-bold text-white">Stock Quotes</h1>
 
       {/* Search and Filter */}
-      <div className="bg-white rounded-lg shadow-md p-4">
+      <div className="bg-[#1A1A2E]/80 backdrop-blur-sm rounded-xl p-4 border border-white/5">
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
+          <div className="flex-1 relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
             <input
               type="text"
               placeholder="Search by symbol or company name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-3 bg-[#16213E] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all"
             />
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => handleSort('symbol')}
-              className={`px-4 py-2 rounded-md text-sm font-medium ${
-                sortBy === 'symbol' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                sortBy === 'symbol'
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
               }`}
             >
               Symbol {sortBy === 'symbol' && (sortDir === 'asc' ? '↑' : '↓')}
             </button>
             <button
               onClick={() => handleSort('price')}
-              className={`px-4 py-2 rounded-md text-sm font-medium ${
-                sortBy === 'price' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                sortBy === 'price'
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
               }`}
             >
               Price {sortBy === 'price' && (sortDir === 'asc' ? '↑' : '↓')}
             </button>
             <button
               onClick={() => handleSort('change')}
-              className={`px-4 py-2 rounded-md text-sm font-medium ${
-                sortBy === 'change' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                sortBy === 'change'
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
               }`}
             >
               Change {sortBy === 'change' && (sortDir === 'asc' ? '↑' : '↓')}
@@ -100,14 +111,19 @@ export function QuotesPage() {
       </div>
 
       {/* Results Count */}
-      <p className="text-sm text-gray-600">
-        Showing {sortedQuotes.length} of {quotes?.length || 0} quotes
+      <p className="text-sm text-gray-400">
+        Showing <span className="text-purple-400 font-medium">{sortedQuotes.length}</span> of <span className="text-white font-medium">{quotes?.length || 0}</span> quotes
       </p>
 
       {/* Quotes Grid */}
       {sortedQuotes.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <p className="text-gray-500">No quotes found matching "{searchTerm}"</p>
+        <div className="bg-[#1A1A2E]/80 backdrop-blur-sm rounded-xl p-8 text-center border border-white/5">
+          <div className="w-16 h-16 mx-auto mb-4 bg-purple-500/20 rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <p className="text-gray-400">No quotes found matching "<span className="text-purple-400">{searchTerm}</span>"</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

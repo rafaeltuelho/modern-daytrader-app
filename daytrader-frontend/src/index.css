@@ -1,36 +1,497 @@
 @import "tailwindcss";
 
-/* Base styles */
-body {
-  @apply bg-gray-50 text-gray-900 min-h-screen;
+/* ========================================
+   DayTrader Pro - Modern Dark Purple Theme
+   Inspired by Robinhood, Webull, TradingView
+   ======================================== */
+
+/* CSS Custom Properties for Theme Colors */
+:root {
+  /* Primary Backgrounds */
+  --bg-primary: #0D0D0D;
+  --bg-secondary: #1A1A2E;
+  --bg-tertiary: #16213E;
+  --bg-card: rgba(26, 26, 46, 0.8);
+  --bg-card-hover: rgba(26, 26, 46, 0.95);
+
+  /* Purple Accents */
+  --accent-primary: #7B2CBF;
+  --accent-secondary: #9D4EDD;
+  --accent-light: #C77DFF;
+  --accent-glow: rgba(157, 78, 221, 0.3);
+
+  /* Secondary Accents (Teal/Blue) */
+  --accent-teal: #0EA5E9;
+  --accent-cyan: #22D3EE;
+
+  /* Trading Colors */
+  --color-profit: #10B981;
+  --color-profit-light: #34D399;
+  --color-loss: #EF4444;
+  --color-loss-light: #F87171;
+
+  /* Text Colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #A0AEC0;
+  --text-muted: #6B7280;
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(157, 78, 221, 0.3);
+
+  /* Shadows */
+  --shadow-glow: 0 0 20px rgba(157, 78, 221, 0.15);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
-/* Form elements styling */
+/* Base styles */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  @apply bg-[#0D0D0D] text-white min-h-screen antialiased;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
+}
+
+/* Form elements styling - Dark Theme */
 input, select, textarea {
-  @apply border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none;
+  @apply bg-[#1A1A2E] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500;
+  @apply focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 outline-none;
+  @apply transition-all duration-200;
+}
+
+input:hover, select:hover, textarea:hover {
+  @apply border-purple-500/30;
 }
 
 /* Button base styles */
 button {
-  @apply px-4 py-2 rounded-md font-medium transition-colors cursor-pointer;
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer;
 }
 
-/* Primary button */
+/* Primary button - Purple gradient */
 .btn-primary {
-  @apply bg-blue-600 text-white hover:bg-blue-700;
+  @apply bg-gradient-to-r from-purple-600 to-purple-500 text-white;
+  @apply hover:from-purple-500 hover:to-purple-400;
+  @apply shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40;
+  @apply active:scale-[0.98];
 }
 
-/* Secondary button */
+/* Secondary button - Subtle dark */
 .btn-secondary {
-  @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+  @apply bg-white/5 text-gray-300 border border-white/10;
+  @apply hover:bg-white/10 hover:text-white;
 }
 
-/* Danger button */
+/* Danger button - Red with glow */
 .btn-danger {
-  @apply bg-red-600 text-white hover:bg-red-700;
+  @apply bg-red-600 text-white hover:bg-red-500;
+  @apply shadow-lg shadow-red-500/25 hover:shadow-red-500/40;
 }
 
-/* Card component */
+/* Success button - Green with glow */
+.btn-success {
+  @apply bg-emerald-600 text-white hover:bg-emerald-500;
+  @apply shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40;
+}
+
+/* Card component - Glassmorphism effect */
 .card {
-  @apply bg-white rounded-lg shadow-md p-6;
+  @apply bg-[#1A1A2E]/80 backdrop-blur-sm rounded-xl p-6;
+  @apply border border-white/5;
+  box-shadow: var(--shadow-card);
+}
+
+.card-hover {
+  @apply transition-all duration-300;
+  @apply hover:bg-[#1A1A2E]/95 hover:border-purple-500/20;
+  @apply hover:shadow-[0_0_30px_rgba(157,78,221,0.1)];
+}
+
+/* Glassmorphism utility */
+.glass {
+  @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-xl;
+}
+
+/* Purple glow effects */
+.glow-purple {
+  box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+}
+
+.glow-purple-sm {
+  box-shadow: 0 0 10px rgba(157, 78, 221, 0.2);
+}
+
+/* Profit/Loss text colors */
+.text-profit {
+  @apply text-emerald-400;
+}
+
+.text-loss {
+  @apply text-red-400;
+}
+
+/* Status badges */
+.badge {
+  @apply px-2.5 py-1 text-xs font-semibold rounded-full;
+}
+
+.badge-success {
+  @apply bg-emerald-500/20 text-emerald-400 border border-emerald-500/30;
+}
+
+.badge-warning {
+  @apply bg-amber-500/20 text-amber-400 border border-amber-500/30;
+}
+
+.badge-danger {
+  @apply bg-red-500/20 text-red-400 border border-red-500/30;
+}
+
+.badge-info {
+  @apply bg-purple-500/20 text-purple-400 border border-purple-500/30;
+}
+
+.badge-neutral {
+  @apply bg-gray-500/20 text-gray-400 border border-gray-500/30;
+}
+
+/* Table styling for dark theme */
+.table-dark {
+  @apply bg-[#1A1A2E]/60 backdrop-blur-sm rounded-xl overflow-hidden;
+  @apply border border-white/5;
+}
+
+.table-dark thead {
+  @apply bg-[#16213E]/80;
+}
+
+.table-dark th {
+  @apply px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider;
+}
+
+.table-dark tbody tr {
+  @apply border-t border-white/5 transition-colors;
+}
+
+.table-dark tbody tr:hover {
+  @apply bg-purple-500/5;
+}
+
+.table-dark td {
+  @apply px-4 py-3 text-sm;
+}
+
+/* Stat cards */
+.stat-card {
+  @apply p-4 rounded-xl transition-all duration-300;
+  @apply border border-white/5;
+}
+
+.stat-card-purple {
+  @apply bg-gradient-to-br from-purple-500/20 to-purple-600/10;
+  @apply border-purple-500/20;
+}
+
+.stat-card-blue {
+  @apply bg-gradient-to-br from-blue-500/20 to-blue-600/10;
+  @apply border-blue-500/20;
+}
+
+.stat-card-green {
+  @apply bg-gradient-to-br from-emerald-500/20 to-emerald-600/10;
+  @apply border-emerald-500/20;
+}
+
+.stat-card-teal {
+  @apply bg-gradient-to-br from-teal-500/20 to-teal-600/10;
+  @apply border-teal-500/20;
+}
+
+/* Animations */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(157, 78, 221, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(157, 78, 221, 0.5);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  @apply outline-none ring-2 ring-purple-500 ring-offset-2 ring-offset-[#0D0D0D];
+}
+
+/* ========================================
+   Enhanced Micro-interactions & Effects
+   ======================================== */
+
+/* Subtle shimmer effect for premium feel */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-hover:hover {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(157, 78, 221, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Price ticker animation */
+@keyframes price-flash-up {
+  0% { background-color: rgba(16, 185, 129, 0.3); }
+  100% { background-color: transparent; }
+}
+
+@keyframes price-flash-down {
+  0% { background-color: rgba(239, 68, 68, 0.3); }
+  100% { background-color: transparent; }
+}
+
+.price-up {
+  animation: price-flash-up 0.5s ease-out;
+}
+
+.price-down {
+  animation: price-flash-down 0.5s ease-out;
+}
+
+/* Floating label effect for inputs */
+.floating-input-wrapper {
+  position: relative;
+}
+
+.floating-input-wrapper label {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.2s ease;
+  pointer-events: none;
+  color: var(--text-muted);
+}
+
+.floating-input-wrapper input:focus ~ label,
+.floating-input-wrapper input:not(:placeholder-shown) ~ label {
+  top: 0;
+  transform: translateY(-50%) scale(0.85);
+  background: var(--bg-secondary);
+  padding: 0 0.5rem;
+  color: var(--accent-secondary);
+}
+
+/* Modern gradient text */
+.gradient-text {
+  @apply bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 bg-clip-text text-transparent;
+}
+
+.gradient-text-success {
+  @apply bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent;
+}
+
+/* Frosted glass panel */
+.frosted-panel {
+  @apply backdrop-blur-xl;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 26, 46, 0.9) 0%,
+    rgba(22, 33, 62, 0.8) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Modern number display */
+.number-display {
+  font-feature-settings: 'tnum' on, 'lnum' on;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Market status indicators */
+.market-open {
+  @apply relative;
+}
+
+.market-open::before {
+  content: '';
+  @apply absolute -left-2 top-1/2 -translate-y-1/2 w-2 h-2 bg-emerald-400 rounded-full;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.market-closed::before {
+  content: '';
+  @apply absolute -left-2 top-1/2 -translate-y-1/2 w-2 h-2 bg-red-400 rounded-full;
+}
+
+/* Trading action buttons with enhanced states */
+.btn-trade-buy {
+  @apply bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-semibold;
+  @apply hover:from-emerald-500 hover:to-emerald-400;
+  @apply shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/50;
+  @apply active:scale-[0.98] transition-all duration-200;
+  @apply focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-[#0D0D0D];
+}
+
+.btn-trade-sell {
+  @apply bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold;
+  @apply hover:from-red-500 hover:to-red-400;
+  @apply shadow-lg shadow-red-500/25 hover:shadow-red-500/50;
+  @apply active:scale-[0.98] transition-all duration-200;
+  @apply focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-[#0D0D0D];
+}
+
+/* Subtle border glow on hover */
+.border-glow:hover {
+  box-shadow: 0 0 0 1px rgba(157, 78, 221, 0.3),
+              0 0 15px rgba(157, 78, 221, 0.1);
+}
+
+/* Data grid styles for tables */
+.data-grid {
+  @apply font-mono text-sm;
+}
+
+.data-grid-header {
+  @apply bg-[#16213E]/80 text-gray-400 uppercase text-xs tracking-wider;
+}
+
+.data-grid-row {
+  @apply border-b border-white/5 transition-colors hover:bg-purple-500/5;
+}
+
+.data-grid-cell {
+  @apply py-3 px-4;
+}
+
+/* Skeleton loading animation */
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton {
+  @apply rounded-lg;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+/* Tooltip styles */
+.tooltip {
+  @apply absolute z-50 px-3 py-2 text-sm bg-[#1A1A2E] text-white rounded-lg shadow-xl;
+  @apply border border-white/10 backdrop-blur-sm;
+  @apply opacity-0 invisible transition-all duration-200;
+}
+
+.tooltip-trigger:hover .tooltip {
+  @apply opacity-100 visible;
+}
+
+/* Quote card specific enhancements */
+.quote-card {
+  @apply relative overflow-hidden;
+}
+
+.quote-card::before {
+  content: '';
+  @apply absolute top-0 left-0 right-0 h-0.5 opacity-0 transition-opacity duration-300;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+}
+
+.quote-card:hover::before {
+  @apply opacity-100;
+}
+
+/* Order status progress indicator */
+.order-progress {
+  @apply h-1 bg-white/10 rounded-full overflow-hidden;
+}
+
+.order-progress-bar {
+  @apply h-full rounded-full transition-all duration-500;
+}
+
+.order-progress-pending {
+  @apply bg-gradient-to-r from-amber-500 to-amber-400;
+  width: 25%;
+}
+
+.order-progress-processing {
+  @apply bg-gradient-to-r from-blue-500 to-blue-400;
+  width: 50%;
+}
+
+.order-progress-completed {
+  @apply bg-gradient-to-r from-emerald-500 to-emerald-400;
+  width: 100%;
+}
+
+/* Responsive container max-widths */
+.container-narrow {
+  @apply max-w-2xl mx-auto;
+}
+
+.container-medium {
+  @apply max-w-4xl mx-auto;
+}
+
+.container-wide {
+  @apply max-w-7xl mx-auto;
+}
+
+/* Selection styles */
+::selection {
+  background: rgba(157, 78, 221, 0.3);
+  color: white;
+}
+
+/* Print styles - hide interactive elements */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
 }

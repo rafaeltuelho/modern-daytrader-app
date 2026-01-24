@@ -6,11 +6,11 @@ interface ErrorAlertProps {
 
 export function ErrorAlert({ message, onDismiss, title = 'Error' }: ErrorAlertProps) {
   return (
-    <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md" role="alert">
+    <div className="bg-red-500/10 border border-red-500/30 p-4 rounded-xl backdrop-blur-sm" role="alert">
       <div className="flex items-start">
         <div className="flex-shrink-0">
           <svg
-            className="h-5 w-5 text-red-500"
+            className="h-5 w-5 text-red-400"
             viewBox="0 0 20 20"
             fill="currentColor"
             aria-hidden="true"
@@ -23,14 +23,14 @@ export function ErrorAlert({ message, onDismiss, title = 'Error' }: ErrorAlertPr
           </svg>
         </div>
         <div className="ml-3 flex-1">
-          <h3 className="text-sm font-medium text-red-800">{title}</h3>
-          <p className="mt-1 text-sm text-red-700">{message}</p>
+          <h3 className="text-sm font-medium text-red-400">{title}</h3>
+          <p className="mt-1 text-sm text-red-300">{message}</p>
         </div>
         {onDismiss && (
           <div className="ml-4 flex-shrink-0">
             <button
               onClick={onDismiss}
-              className="inline-flex text-red-500 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded"
+              className="inline-flex text-red-400 hover:text-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-[#0D0D0D] rounded"
               aria-label="Dismiss"
             >
               <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

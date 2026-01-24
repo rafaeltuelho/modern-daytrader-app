@@ -7,11 +7,11 @@ interface SuccessAlertProps {
   title?: string;
 }
 
-export function SuccessAlert({ 
-  message, 
-  onDismiss, 
-  autoDismissMs = 3000, 
-  title = 'Success' 
+export function SuccessAlert({
+  message,
+  onDismiss,
+  autoDismissMs = 3000,
+  title = 'Success'
 }: SuccessAlertProps) {
   const [isVisible, setIsVisible] = useState(true);
 
@@ -28,11 +28,11 @@ export function SuccessAlert({
   if (!isVisible) return null;
 
   return (
-    <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-md" role="alert">
+    <div className="bg-emerald-500/10 border border-emerald-500/30 p-4 rounded-xl backdrop-blur-sm" role="alert">
       <div className="flex items-start">
         <div className="flex-shrink-0">
           <svg
-            className="h-5 w-5 text-green-500"
+            className="h-5 w-5 text-emerald-400"
             viewBox="0 0 20 20"
             fill="currentColor"
             aria-hidden="true"
@@ -45,14 +45,14 @@ export function SuccessAlert({
           </svg>
         </div>
         <div className="ml-3 flex-1">
-          <h3 className="text-sm font-medium text-green-800">{title}</h3>
-          <p className="mt-1 text-sm text-green-700">{message}</p>
+          <h3 className="text-sm font-medium text-emerald-400">{title}</h3>
+          <p className="mt-1 text-sm text-emerald-300">{message}</p>
         </div>
         {onDismiss && (
           <div className="ml-4 flex-shrink-0">
             <button
               onClick={() => { setIsVisible(false); onDismiss(); }}
-              className="inline-flex text-green-500 hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded"
+              className="inline-flex text-emerald-400 hover:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-[#0D0D0D] rounded"
               aria-label="Dismiss"
             >
               <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
