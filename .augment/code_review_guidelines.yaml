@@ -1,11 +1,14 @@
 # Guidelines exclusive to augmentcode/auggie
 
 areas:
-  databases:
-    security_vulnerabilities: "Scan code for security vulnerabilities"
+  security:
+    description: "Scan code for security vulnerabilities"
     globs:
       - "**"
     rules:
-      - id: "Sec_code_scan"
-        description: "Scan the code for security vulnerabilities using Snyk tools."
+      - id: "sec-code-scan"
+        description: >
+          When a PR is created, scan the changes for security vulnerabilities using Snyk MCP tools.
+          - If any vulnerabilities are found, list them in the report show which parts of the code are affected. And propose fixing them.
+          - If no vulnerabilities are found, add a comment to the PR saying "No security vulnerabilities found."
         severity: "high"
