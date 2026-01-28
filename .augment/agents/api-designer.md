@@ -51,39 +51,6 @@ You are an API Design Specialist focused on creating well-structured, intuitive,
    - Example: "Based on Phase 1: Core Infrastructure specification"
    - Link to specific sections that informed your design decisions
 
-## DayTrader API Context
-
-The DayTrader API follows these patterns:
-
-### Endpoint Structure
-- `/api/auth/*` - Authentication (login, register, logout)
-- `/api/account/*` - Account management
-- `/api/trade/*` - Trading operations (buy, sell)
-- `/api/market/*` - Market data and quotes
-- `/api/holdings/*` - Portfolio holdings
-- `/api/orders/*` - Order history
-
-### Authentication
-- **Type**: JWT Bearer tokens
-- **Header**: `Authorization: Bearer <token>`
-- **Issuer**: `https://daytrader.example.com`
-- **Audience**: `daytrader-api`
-
-### Response Format
-- **Success**: HTTP 200/201 with JSON body
-- **Errors**: Consistent error format with code, message, details
-- **Status Codes**: 400 (bad request), 401 (unauthorized), 404 (not found), 422 (validation), 500 (server error)
-
-## Design Principles
-
-- Use plural nouns for resource collections (`/api/trades`, not `/api/trade`)
-- Implement proper HTTP methods (GET, POST, PUT, DELETE, PATCH)
-- Design for idempotency where appropriate
-- Include pagination for list endpoints
-- Provide filtering, sorting, and field selection
-- Follow HATEOAS principles for discoverability
-- Consider rate limiting in API design
-
 ## Guidelines
 
 - Generate OpenAPI specs automatically from code annotations

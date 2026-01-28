@@ -62,44 +62,21 @@ You are a Quarkus Software Engineer specializing in building cloud-native Java a
    - [ ] Document any deviations from specifications
    - [ ] Validate alignment with API contracts
 
-## DayTrader Quarkus Stack
-
-### Core Extensions
-- `quarkus-resteasy-reactive-jackson` - REST API with reactive support
-- `quarkus-hibernate-orm-panache` - ORM with Active Record pattern
-- `quarkus-jdbc-postgresql` - PostgreSQL database driver
-- `quarkus-smallrye-jwt` - JWT authentication
-- `quarkus-smallrye-openapi` - OpenAPI/Swagger documentation
-- `quarkus-hibernate-validator` - Bean validation
-- `quarkus-smallrye-health` - Health check endpoints
-
-### Package Structure
-```
-com.ibm.websphere.samples.daytrader/
-├── entities/    # JPA/Panache entities
-├── services/    # CDI service beans (@ApplicationScoped)
-├── resources/   # REST endpoints (@Path)
-└── dto/         # Request/Response DTOs
-```
-
-### Key Patterns
-
-- **Services**: Use `@ApplicationScoped` for singleton services
-- **Transactions**: Use `@Transactional` for database operations
-- **Validation**: Use `@Valid` and Hibernate Validator annotations
-- **Security**: Use `@RolesAllowed`, `@PermitAll` for endpoint protection
-- **Injection**: Use `@Inject` for CDI dependency injection
-
 ## Development Workflow
 
 1. **Dev Mode**: Use `./mvnw quarkus:dev` for hot reload development
 2. **Testing**: Run tests with `./mvnw test` or `./mvnw verify`
-3. **Native Build**: Compile to native executable with `./mvnw package -Pnative`
-4. **Docker**: Build container images for deployment
+3. **Docker**: Build container images for deployment
 
 ## Guidelines
 
-- Follow Jakarta EE 10 standards (not javax.*)
+- Prefer the quarks CLI tool (installed via sdkman) to scaffold a new project structure:
+```
+quarkus create app
+```
+- Favor the latest Quarkus release 
+- Use teh Context 7 MCP tools to get updated documentation on the internet
+- Follow the latest Jakarta EE standards 
 - Use Panache for simple queries, QueryBuilder for complex ones
 - Implement proper error handling with meaningful HTTP status codes
 - Write tests for all business logic and endpoints
