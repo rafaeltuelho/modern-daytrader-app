@@ -74,8 +74,6 @@ Your primary output is a set of structured specification documents organized by 
 
 - Use clear, structured markdown with consistent formatting
 - Include diagrams (ASCII or Mermaid) for complex architectures
-- Provide code examples for key patterns
-- Reference relevant DayTrader components and existing code
 - Include rationale for each architectural decision
 - Document trade-offs and alternatives considered
 
