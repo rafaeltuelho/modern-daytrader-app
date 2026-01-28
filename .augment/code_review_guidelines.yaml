@@ -11,4 +11,5 @@ areas:
           When a PR is created, scan the changes for security vulnerabilities using Snyk MCP tools.
           - If any vulnerabilities are found, list them in the report show which parts of the code are affected. And propose fixing them.
           - If no vulnerabilities are found, add a comment to the PR saying "No security vulnerabilities found."
+          - ALWAYS include the full scan report provided by Snyk in the PR comment.
         severity: "high"
