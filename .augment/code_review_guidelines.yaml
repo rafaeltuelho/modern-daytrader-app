@@ -1,0 +1,11 @@
+# Guidelines exclusive to augmentcode/auggie
+
+areas:
+  databases:
+    security_vulnerabilities: "Scan code for security vulnerabilities"
+    globs:
+      - "**"
+    rules:
+      - id: "Sec_code_scan"
+        description: "Scan the code for security vulnerabilities using Snyk tools."
+        severity: "high"
