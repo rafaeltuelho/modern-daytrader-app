@@ -1,5 +1,5 @@
 ---
-name: java-architect
+name: software-architect
 description: Focuses on application architecture, design patterns, and migration strategy for legacy Java applications
 model: gpt5.1
 color: orange
