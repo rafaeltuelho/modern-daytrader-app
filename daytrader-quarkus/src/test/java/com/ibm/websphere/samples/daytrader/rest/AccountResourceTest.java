@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ibm.websphere.samples.daytrader.repository.AccountProfileRepository;
 import com.ibm.websphere.samples.daytrader.repository.AccountRepository;
+import com.ibm.websphere.samples.daytrader.util.TestJwtGenerator;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
@@ -48,10 +49,14 @@ class AccountResourceTest {
     AccountProfileRepository accountProfileRepository;
 
     private String testUserID = "resttest";
+    private String jwtToken;
 
     @BeforeEach
     @Transactional
     void setUp() {
+        // Generate JWT token for authenticated requests
+        jwtToken = TestJwtGenerator.generateToken(testUserID);
+
         // Clean up any existing test data
         accountRepository.findByProfileUserID(testUserID).ifPresent(account -> {
             accountRepository.delete(account);
@@ -167,8 +172,9 @@ class AccountResourceTest {
                 .statusCode(201)
                 .extract().path("accountID");
 
-        // Now get the account by ID
+        // Now get the account by ID (requires JWT)
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .when().get("/api/v1/accounts/" + accountID)
             .then()
                 .statusCode(200)
@@ -180,6 +186,7 @@ class AccountResourceTest {
     @Test
     void testGetAccountByIdNotFound() {
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .when().get("/api/v1/accounts/99999")
             .then()
                 .statusCode(404)

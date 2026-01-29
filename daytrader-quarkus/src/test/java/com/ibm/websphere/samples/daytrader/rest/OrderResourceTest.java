@@ -33,6 +33,7 @@ import com.ibm.websphere.samples.daytrader.repository.AccountProfileRepository;
 import com.ibm.websphere.samples.daytrader.repository.AccountRepository;
 import com.ibm.websphere.samples.daytrader.repository.QuoteRepository;
 import com.ibm.websphere.samples.daytrader.service.TradeService;
+import com.ibm.websphere.samples.daytrader.util.TestJwtGenerator;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
@@ -87,9 +88,13 @@ class OrderResourceTest {
         tradeService.register(testUserID, testPassword, "Order Test User", "123 Order St",
                              "order@example.com", "1234-5678-9012-3456", new BigDecimal("10000.00"));
 
+        // Generate JWT token for authenticated request - userID is extracted from JWT
+        String jwtToken = TestJwtGenerator.generateToken(testUserID);
+
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .contentType(ContentType.JSON)
-            .body("{\"userID\": \"" + testUserID + "\", \"symbol\": \"BUYTEST\", \"quantity\": 10.0, \"orderProcessingMode\": 0}")
+            .body("{\"symbol\": \"BUYTEST\", \"quantity\": 10.0}")
             .when().post("/api/v1/orders/buy")
             .then()
                 .statusCode(201)
@@ -101,21 +106,31 @@ class OrderResourceTest {
     }
 
     @Test
-    void testBuyStockMissingUserID() {
+    void testBuyStockUserNotFoundInJWT() {
+        // JWT contains a user that doesn't exist in the database
+        String jwtToken = TestJwtGenerator.generateToken("nonexistentuser");
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .contentType(ContentType.JSON)
             .body("{\"symbol\": \"BUYTEST\", \"quantity\": 10.0}")
             .when().post("/api/v1/orders/buy")
             .then()
-                .statusCode(400)
-                .body("message", is("userID is required"));
+                .statusCode(404)
+                .body("message", notNullValue());
     }
 
     @Test
     void testBuyStockMissingSymbol() {
+        // Register user first
+        String testUserID = "missingsymbol" + System.currentTimeMillis();
+        tradeService.register(testUserID, testPassword, "Missing Symbol Test", "123 Test St",
+                             "test@example.com", "1234-5678-9012-3456", new BigDecimal("10000.00"));
+
+        String jwtToken = TestJwtGenerator.generateToken(testUserID);
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .contentType(ContentType.JSON)
-            .body("{\"userID\": \"testuser\", \"quantity\": 10.0}")
+            .body("{\"quantity\": 10.0}")
             .when().post("/api/v1/orders/buy")
             .then()
                 .statusCode(400)
@@ -124,9 +139,16 @@ class OrderResourceTest {
 
     @Test
     void testBuyStockInvalidQuantity() {
+        // Register user first
+        String testUserID = "invalidqty" + System.currentTimeMillis();
+        tradeService.register(testUserID, testPassword, "Invalid Quantity Test", "123 Test St",
+                             "test@example.com", "1234-5678-9012-3456", new BigDecimal("10000.00"));
+
+        String jwtToken = TestJwtGenerator.generateToken(testUserID);
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .contentType(ContentType.JSON)
-            .body("{\"userID\": \"testuser\", \"symbol\": \"BUYTEST\", \"quantity\": 0}")
+            .body("{\"symbol\": \"BUYTEST\", \"quantity\": 0}")
             .when().post("/api/v1/orders/buy")
             .then()
                 .statusCode(400)
@@ -140,9 +162,13 @@ class OrderResourceTest {
         tradeService.register(testUserID, testPassword, "Quote Not Found User", "123 Test St",
                              "test@example.com", "1234-5678-9012-3456", new BigDecimal("10000.00"));
 
+        // Generate JWT token for authenticated request
+        String jwtToken = TestJwtGenerator.generateToken(testUserID);
+
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .contentType(ContentType.JSON)
-            .body("{\"userID\": \"" + testUserID + "\", \"symbol\": \"NONEXISTENT\", \"quantity\": 10.0}")
+            .body("{\"symbol\": \"NONEXISTENT\", \"quantity\": 10.0}")
             .when().post("/api/v1/orders/buy")
             .then()
                 .statusCode(404)
@@ -156,16 +182,20 @@ class OrderResourceTest {
         tradeService.register(testUserID, testPassword, "Sell Test User", "123 Order St",
                              "order@example.com", "1234-5678-9012-3456", new BigDecimal("10000.00"));
 
+        // Generate JWT token for authenticated request - userID is extracted from JWT
+        String jwtToken = TestJwtGenerator.generateToken(testUserID);
+
         // First buy stock to create a holding
         tradeService.buy(testUserID, "SELLTEST", 5.0, 0);
 
         // Get the holding ID
         Integer holdingID = tradeService.getHoldings(testUserID).get(0).getHoldingID();
 
-        // Sell the holding via REST
+        // Sell the holding via REST (requires JWT, no userID in body)
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .contentType(ContentType.JSON)
-            .body("{\"userID\": \"" + testUserID + "\", \"holdingID\": " + holdingID + ", \"orderProcessingMode\": 0}")
+            .body("{\"holdingID\": " + holdingID + "}")
             .when().post("/api/v1/orders/sell")
             .then()
                 .statusCode(201)
@@ -176,21 +206,31 @@ class OrderResourceTest {
     }
 
     @Test
-    void testSellHoldingMissingUserID() {
+    void testSellHoldingUserNotFoundInJWT() {
+        // JWT contains a user that doesn't exist in the database
+        String jwtToken = TestJwtGenerator.generateToken("nonexistentuser");
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .contentType(ContentType.JSON)
             .body("{\"holdingID\": 123}")
             .when().post("/api/v1/orders/sell")
             .then()
-                .statusCode(400)
-                .body("message", is("userID is required"));
+                .statusCode(404)
+                .body("message", notNullValue());
     }
 
     @Test
     void testSellHoldingMissingHoldingID() {
+        // Register user first
+        String testUserID = "missingholdingid" + System.currentTimeMillis();
+        tradeService.register(testUserID, testPassword, "Missing HoldingID Test", "123 Test St",
+                             "test@example.com", "1234-5678-9012-3456", new BigDecimal("10000.00"));
+
+        String jwtToken = TestJwtGenerator.generateToken(testUserID);
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .contentType(ContentType.JSON)
-            .body("{\"userID\": \"testuser\"}")
+            .body("{}")
             .when().post("/api/v1/orders/sell")
             .then()
                 .statusCode(400)
@@ -204,13 +244,16 @@ class OrderResourceTest {
         tradeService.register(testUserID, testPassword, "Get Orders User", "123 Order St",
                              "order@example.com", "1234-5678-9012-3456", new BigDecimal("10000.00"));
 
+        // Generate JWT token for authenticated request - userID is extracted from JWT
+        String jwtToken = TestJwtGenerator.generateToken(testUserID);
+
         // Create some orders
         tradeService.buy(testUserID, "BUYTEST", 5.0, 0);
         tradeService.buy(testUserID, "SELLTEST", 3.0, 0);
 
-        // Get orders via REST
+        // Get orders via REST (requires JWT, no query param needed)
         given()
-            .queryParam("userID", testUserID)
+            .header("Authorization", "Bearer " + jwtToken)
             .when().get("/api/v1/orders")
             .then()
                 .statusCode(200)
@@ -218,18 +261,11 @@ class OrderResourceTest {
     }
 
     @Test
-    void testGetOrdersMissingUserID() {
+    void testGetOrdersUserNotFoundInJWT() {
+        // JWT contains a user that doesn't exist in the database
+        String jwtToken = TestJwtGenerator.generateToken("nonexistentuser");
         given()
-            .when().get("/api/v1/orders")
-            .then()
-                .statusCode(400)
-                .body("message", is("userID query parameter is required"));
-    }
-
-    @Test
-    void testGetOrdersUserNotFound() {
-        given()
-            .queryParam("userID", "nonexistentuser")
+            .header("Authorization", "Bearer " + jwtToken)
             .when().get("/api/v1/orders")
             .then()
                 .statusCode(404)

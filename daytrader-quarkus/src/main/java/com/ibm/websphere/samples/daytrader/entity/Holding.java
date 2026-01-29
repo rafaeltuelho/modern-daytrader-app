@@ -28,7 +28,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.TableGenerator;
+
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
@@ -45,15 +45,7 @@ public class Holding implements Serializable {
     private static final long serialVersionUID = -2338411656251935480L;
 
     @Id
-    @TableGenerator(
-        name = "holdingIdGen", 
-        table = "KEYGENEJB", 
-        pkColumnName = "KEYNAME", 
-        valueColumnName = "KEYVAL", 
-        pkColumnValue = "holding", 
-        allocationSize = 1000
-    )
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "holdingIdGen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "HOLDINGID", nullable = false)
     private Integer holdingID;
 

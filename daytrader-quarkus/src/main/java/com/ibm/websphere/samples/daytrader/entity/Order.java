@@ -32,7 +32,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.TableGenerator;
+
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
@@ -64,15 +64,7 @@ public class Order implements Serializable {
     private static final long serialVersionUID = 120650490200739057L;
 
     @Id
-    @TableGenerator(
-        name = "orderIdGen", 
-        table = "KEYGENEJB", 
-        pkColumnName = "KEYNAME", 
-        valueColumnName = "KEYVAL", 
-        pkColumnValue = "order", 
-        allocationSize = 1000
-    )
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "orderIdGen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ORDERID", nullable = false)
     private Integer orderID;
 

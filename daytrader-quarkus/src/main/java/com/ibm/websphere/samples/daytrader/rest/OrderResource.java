@@ -21,6 +21,7 @@ import com.ibm.websphere.samples.daytrader.dto.OrderDTO;
 import com.ibm.websphere.samples.daytrader.service.TradeService;
 import com.ibm.websphere.samples.daytrader.util.TradeConfig;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -32,6 +33,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -49,13 +51,17 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Orders", description = "Trading order operations")
+@RolesAllowed({"Trader", "User"})
 public class OrderResource {
 
     @Inject
     TradeService tradeService;
 
+    @Inject
+    JsonWebToken jwt;
+
     @GET
-    @Operation(summary = "Get user orders", description = "Retrieves all orders for a user")
+    @Operation(summary = "Get user orders", description = "Retrieves all orders for the authenticated user")
     @APIResponses({
         @APIResponse(
             responseCode = "200",
@@ -67,10 +73,12 @@ public class OrderResource {
             description = "User not found"
         )
     })
-    public Response getOrders(@QueryParam("userID") String userID) {
+    public Response getOrders() {
+        // Get userID from JWT token
+        String userID = jwt.getSubject();
         if (userID == null || userID.isBlank()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new QuoteResource.ErrorResponse("userID query parameter is required"))
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(new QuoteResource.ErrorResponse("User not authenticated"))
                     .build();
         }
 
@@ -86,7 +94,7 @@ public class OrderResource {
 
     @POST
     @Path("/buy")
-    @Operation(summary = "Buy stock", description = "Creates a buy order for stock shares")
+    @Operation(summary = "Buy stock", description = "Creates a buy order for stock shares for the authenticated user")
     @APIResponses({
         @APIResponse(
             responseCode = "201",
@@ -103,12 +111,15 @@ public class OrderResource {
         )
     })
     public Response buy(BuyRequest request) {
-        // Validate required fields
-        if (request.userID == null || request.userID.isBlank()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new QuoteResource.ErrorResponse("userID is required"))
+        // Get userID from JWT token
+        String userID = jwt.getSubject();
+        if (userID == null || userID.isBlank()) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(new QuoteResource.ErrorResponse("User not authenticated"))
                     .build();
         }
+
+        // Validate required fields
         if (request.symbol == null || request.symbol.isBlank()) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new QuoteResource.ErrorResponse("symbol is required"))
@@ -121,10 +132,8 @@ public class OrderResource {
         }
 
         try {
-            int orderProcessingMode = request.orderProcessingMode != null ? 
-                    request.orderProcessingMode : TradeConfig.SYNCH;
-            OrderDTO order = tradeService.buy(request.userID, request.symbol, 
-                    request.quantity, orderProcessingMode);
+            OrderDTO order = tradeService.buy(userID, request.symbol,
+                    request.quantity, TradeConfig.SYNCH);
             return Response.status(Response.Status.CREATED).entity(order).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -139,7 +148,7 @@ public class OrderResource {
 
     @POST
     @Path("/sell")
-    @Operation(summary = "Sell holding", description = "Creates a sell order for a holding")
+    @Operation(summary = "Sell holding", description = "Creates a sell order for a holding for the authenticated user")
     @APIResponses({
         @APIResponse(
             responseCode = "201",
@@ -152,12 +161,15 @@ public class OrderResource {
         )
     })
     public Response sell(SellRequest request) {
-        // Validate required fields
-        if (request.userID == null || request.userID.isBlank()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new QuoteResource.ErrorResponse("userID is required"))
+        // Get userID from JWT token
+        String userID = jwt.getSubject();
+        if (userID == null || userID.isBlank()) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(new QuoteResource.ErrorResponse("User not authenticated"))
                     .build();
         }
+
+        // Validate required fields
         if (request.holdingID == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new QuoteResource.ErrorResponse("holdingID is required"))
@@ -165,9 +177,7 @@ public class OrderResource {
         }
 
         try {
-            int orderProcessingMode = request.orderProcessingMode != null ?
-                    request.orderProcessingMode : TradeConfig.SYNCH;
-            OrderDTO order = tradeService.sell(request.userID, request.holdingID, orderProcessingMode);
+            OrderDTO order = tradeService.sell(userID, request.holdingID, TradeConfig.SYNCH);
             return Response.status(Response.Status.CREATED).entity(order).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -184,19 +194,15 @@ public class OrderResource {
      * Request DTO for buy operation
      */
     public static class BuyRequest {
-        public String userID;
         public String symbol;
         public double quantity;
-        public Integer orderProcessingMode;
     }
 
     /**
      * Request DTO for sell operation
      */
     public static class SellRequest {
-        public String userID;
         public Integer holdingID;
-        public Integer orderProcessingMode;
     }
 }
 

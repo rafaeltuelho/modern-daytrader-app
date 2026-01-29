@@ -18,17 +18,19 @@ package com.ibm.websphere.samples.daytrader.rest;
 import java.util.List;
 
 import com.ibm.websphere.samples.daytrader.dto.HoldingDTO;
+import com.ibm.websphere.samples.daytrader.dto.PortfolioSummaryDTO;
 import com.ibm.websphere.samples.daytrader.service.TradeService;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -45,13 +47,17 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("/portfolio")
 @Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "Portfolio", description = "Portfolio and holdings operations")
+@RolesAllowed({"Trader", "User"})
 public class PortfolioResource {
 
     @Inject
     TradeService tradeService;
 
+    @Inject
+    JsonWebToken jwt;
+
     @GET
-    @Operation(summary = "Get user portfolio", description = "Retrieves all holdings for a user")
+    @Operation(summary = "Get user portfolio", description = "Retrieves all holdings for the authenticated user")
     @APIResponses({
         @APIResponse(
             responseCode = "200",
@@ -61,22 +67,53 @@ public class PortfolioResource {
         @APIResponse(
             responseCode = "404",
             description = "User not found"
-        ),
-        @APIResponse(
-            responseCode = "400",
-            description = "Invalid request"
         )
     })
-    public Response getPortfolio(@QueryParam("userID") String userID) {
+    public Response getPortfolio() {
+        // Get userID from JWT token
+        String userID = jwt.getSubject();
         if (userID == null || userID.isBlank()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new QuoteResource.ErrorResponse("userID query parameter is required"))
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(new QuoteResource.ErrorResponse("User not authenticated"))
                     .build();
         }
 
         try {
             List<HoldingDTO> holdings = tradeService.getHoldings(userID);
             return Response.ok(holdings).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(new QuoteResource.ErrorResponse(e.getMessage()))
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/summary")
+    @Operation(summary = "Get portfolio summary", description = "Retrieves portfolio summary statistics for the authenticated user")
+    @APIResponses({
+        @APIResponse(
+            responseCode = "200",
+            description = "Portfolio summary",
+            content = @Content(schema = @Schema(implementation = PortfolioSummaryDTO.class))
+        ),
+        @APIResponse(
+            responseCode = "404",
+            description = "User not found"
+        )
+    })
+    public Response getPortfolioSummary() {
+        // Get userID from JWT token
+        String userID = jwt.getSubject();
+        if (userID == null || userID.isBlank()) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(new QuoteResource.ErrorResponse("User not authenticated"))
+                    .build();
+        }
+
+        try {
+            PortfolioSummaryDTO summary = tradeService.getPortfolioSummary(userID);
+            return Response.ok(summary).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(new QuoteResource.ErrorResponse(e.getMessage()))

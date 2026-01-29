@@ -26,6 +26,7 @@ import com.ibm.websphere.samples.daytrader.dto.AccountProfileDTO;
 import com.ibm.websphere.samples.daytrader.dto.HoldingDTO;
 import com.ibm.websphere.samples.daytrader.dto.MarketSummaryDTO;
 import com.ibm.websphere.samples.daytrader.dto.OrderDTO;
+import com.ibm.websphere.samples.daytrader.dto.PortfolioSummaryDTO;
 import com.ibm.websphere.samples.daytrader.dto.QuoteDTO;
 import com.ibm.websphere.samples.daytrader.entity.Account;
 import com.ibm.websphere.samples.daytrader.entity.AccountProfile;
@@ -117,11 +118,21 @@ public class TradeService {
     }
 
     /**
-     * Get account information
+     * Get account information by accountID
      */
     public AccountDTO getAccountData(Integer accountID) {
         Account account = accountRepository.findByIdWithProfile(accountID)
                 .orElseThrow(() -> new IllegalArgumentException("Account not found: " + accountID));
+        return new AccountDTO(account);
+    }
+
+    /**
+     * Get account information by userID
+     */
+    public AccountDTO getAccountDataByUserID(String userID) {
+        LOG.debugf("Get account data for user: %s", userID);
+        Account account = accountRepository.findByProfileUserID(userID)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found for user: " + userID));
         return new AccountDTO(account);
     }
 
@@ -238,6 +249,9 @@ public class TradeService {
             account.setBalance(account.getBalance().subtract(total));
             accountRepository.persist(account);
 
+            // Flush to ensure balance update is persisted before completeOrder clears the entity manager
+            entityManager.flush();
+
             // Complete order synchronously (async processing not implemented yet)
             OrderDTO completedOrder = null;
             if (orderProcessingMode == TradeConfig.SYNCH) {
@@ -270,10 +284,15 @@ public class TradeService {
 
         try {
             // Get account ID using a projection query to avoid loading the entity graph
-            Integer accountId = (Integer) entityManager.createQuery(
-                "SELECT a.accountID FROM Account a WHERE a.profile.userID = :userId")
-                .setParameter("userId", userID)
-                .getSingleResult();
+            Integer accountId;
+            try {
+                accountId = (Integer) entityManager.createQuery(
+                    "SELECT a.accountID FROM Account a WHERE a.profile.userID = :userId")
+                    .setParameter("userId", userID)
+                    .getSingleResult();
+            } catch (jakarta.persistence.NoResultException e) {
+                throw new IllegalArgumentException("User not found: " + userID);
+            }
 
             if (accountId == null) {
                 throw new IllegalArgumentException("User not found: " + userID);
@@ -537,6 +556,38 @@ public class TradeService {
                 .orElseThrow(() -> new IllegalArgumentException("Holding not found: " + holdingID));
 
         return new HoldingDTO(holding);
+    }
+
+    /**
+     * Get portfolio summary for a user
+     * Calculates total holdings value, gains, and other portfolio statistics
+     */
+    public PortfolioSummaryDTO getPortfolioSummary(String userID) {
+        LOG.debugf("Get portfolio summary for user: %s", userID);
+
+        Account account = accountRepository.findByProfileUserID(userID)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found for user: " + userID));
+
+        // Get all holdings with current prices
+        List<Holding> holdings = holdingRepository.findByAccountIdWithQuote(account.getAccountID());
+
+        // Calculate total holdings value
+        BigDecimal holdingsValue = BigDecimal.ZERO;
+        for (Holding holding : holdings) {
+            if (holding.getQuote() != null && holding.getQuote().getPrice() != null) {
+                BigDecimal marketValue = holding.getQuote().getPrice()
+                        .multiply(new BigDecimal(holding.getQuantity()));
+                holdingsValue = holdingsValue.add(marketValue);
+            }
+        }
+
+        return new PortfolioSummaryDTO(
+                account.getAccountID(),
+                account.getBalance(),
+                account.getOpenBalance(),
+                holdingsValue,
+                holdings.size()
+        );
     }
 
     /**

@@ -18,18 +18,23 @@ package com.ibm.websphere.samples.daytrader.rest;
 import java.math.BigDecimal;
 
 import com.ibm.websphere.samples.daytrader.dto.AccountDTO;
+import com.ibm.websphere.samples.daytrader.dto.AccountProfileDTO;
 import com.ibm.websphere.samples.daytrader.service.TradeService;
 
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -52,8 +57,12 @@ public class AccountResource {
     @Inject
     TradeService tradeService;
 
+    @Inject
+    JsonWebToken jwt;
+
     @GET
     @Path("/{accountId}")
+    @RolesAllowed({"Trader", "User"})
     @Operation(summary = "Get account by ID", description = "Retrieves account information by account ID")
     @APIResponses({
         @APIResponse(
@@ -77,7 +86,99 @@ public class AccountResource {
         }
     }
 
+    @GET
+    @Path("/profile")
+    @RolesAllowed({"Trader", "User"})
+    @Operation(summary = "Get current user's profile", description = "Retrieves the profile of the currently authenticated user")
+    @APIResponses({
+        @APIResponse(
+            responseCode = "200",
+            description = "Profile found",
+            content = @Content(schema = @Schema(implementation = AccountProfileDTO.class))
+        ),
+        @APIResponse(
+            responseCode = "401",
+            description = "User not authenticated"
+        ),
+        @APIResponse(
+            responseCode = "404",
+            description = "Profile not found"
+        )
+    })
+    public Response getProfile() {
+        String userID = jwt.getSubject();
+        if (userID == null || userID.isBlank()) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(new QuoteResource.ErrorResponse("User not authenticated"))
+                    .build();
+        }
+        try {
+            AccountProfileDTO profile = tradeService.getAccountProfileData(userID);
+            return Response.ok(profile).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(new QuoteResource.ErrorResponse(e.getMessage()))
+                    .build();
+        }
+    }
+
+    @PUT
+    @Path("/profile")
+    @RolesAllowed({"Trader", "User"})
+    @Operation(summary = "Update current user's profile", description = "Updates the profile of the currently authenticated user")
+    @APIResponses({
+        @APIResponse(
+            responseCode = "200",
+            description = "Profile updated",
+            content = @Content(schema = @Schema(implementation = AccountProfileDTO.class))
+        ),
+        @APIResponse(
+            responseCode = "401",
+            description = "User not authenticated"
+        ),
+        @APIResponse(
+            responseCode = "404",
+            description = "Profile not found"
+        )
+    })
+    public Response updateProfile(UpdateProfileRequest request) {
+        String userID = jwt.getSubject();
+        if (userID == null || userID.isBlank()) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(new QuoteResource.ErrorResponse("User not authenticated"))
+                    .build();
+        }
+        try {
+            AccountProfileDTO profileData = new AccountProfileDTO();
+            profileData.setUserID(userID);
+            profileData.setFullName(request.fullName);
+            profileData.setAddress(request.address);
+            profileData.setEmail(request.email);
+            profileData.setCreditCard(request.creditCard);
+            profileData.setPassword(request.password);
+
+            AccountProfileDTO updatedProfile = tradeService.updateAccountProfile(profileData);
+            return Response.ok(updatedProfile).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(new QuoteResource.ErrorResponse(e.getMessage()))
+                    .build();
+        }
+    }
+
+    /**
+     * Request DTO for profile update
+     */
+    public static class UpdateProfileRequest {
+        public String fullName;
+        public String address;
+        public String email;
+        public String creditCard;
+        public String password;
+    }
+
     @POST
+    @PermitAll
     @Operation(summary = "Register new account", description = "Creates a new user account and profile")
     @APIResponses({
         @APIResponse(

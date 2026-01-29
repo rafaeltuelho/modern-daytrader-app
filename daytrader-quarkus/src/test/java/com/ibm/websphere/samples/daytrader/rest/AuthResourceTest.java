@@ -85,11 +85,15 @@ class AuthResourceTest {
             .when().post("/api/v1/auth/login")
             .then()
                 .statusCode(200)
-                .body("profileID", is(testUserID))
-                .body("accountID", notNullValue())
-                .body("balance", notNullValue())
-                .body("loginCount", is(1))
-                .body("lastLogin", notNullValue());
+                // Response is now LoginResponseDTO with user, token, expiresIn, tokenType
+                .body("user.profileID", is(testUserID))
+                .body("user.accountID", notNullValue())
+                .body("user.balance", notNullValue())
+                .body("user.loginCount", is(1))
+                .body("user.lastLogin", notNullValue())
+                .body("token", notNullValue())
+                .body("expiresIn", is(3600))
+                .body("tokenType", is("Bearer"));
     }
 
     @Test

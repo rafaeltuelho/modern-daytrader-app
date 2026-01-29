@@ -33,6 +33,7 @@ import com.ibm.websphere.samples.daytrader.repository.AccountProfileRepository;
 import com.ibm.websphere.samples.daytrader.repository.AccountRepository;
 import com.ibm.websphere.samples.daytrader.repository.QuoteRepository;
 import com.ibm.websphere.samples.daytrader.service.TradeService;
+import com.ibm.websphere.samples.daytrader.util.TestJwtGenerator;
 
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -86,13 +87,16 @@ class PortfolioResourceTest {
         tradeService.register(testUserID, testPassword, "Portfolio Test User", "123 Portfolio St",
                              "portfolio@example.com", "1234-5678-9012-3456", new BigDecimal("10000.00"));
 
+        // Generate JWT token for authenticated request - userID is extracted from JWT
+        String jwtToken = TestJwtGenerator.generateToken(testUserID);
+
         // Buy some stocks to create holdings
         tradeService.buy(testUserID, "PORT1", 10.0, 0);
         tradeService.buy(testUserID, "PORT2", 5.0, 0);
 
-        // Get portfolio via REST
+        // Get portfolio via REST (requires JWT, no query param needed)
         given()
-            .queryParam("userID", testUserID)
+            .header("Authorization", "Bearer " + jwtToken)
             .when().get("/api/v1/portfolio")
             .then()
                 .statusCode(200)
@@ -104,22 +108,44 @@ class PortfolioResourceTest {
     }
 
     @Test
-    void testGetPortfolioMissingUserID() {
+    void testGetPortfolioUserNotFoundInJWT() {
+        // JWT contains a user that doesn't exist in the database
+        String jwtToken = TestJwtGenerator.generateToken("nonexistentuser");
         given()
-            .when().get("/api/v1/portfolio")
-            .then()
-                .statusCode(400)
-                .body("message", is("userID query parameter is required"));
-    }
-
-    @Test
-    void testGetPortfolioUserNotFound() {
-        given()
-            .queryParam("userID", "nonexistentuser")
+            .header("Authorization", "Bearer " + jwtToken)
             .when().get("/api/v1/portfolio")
             .then()
                 .statusCode(404)
                 .body("message", notNullValue());
+    }
+
+    @Test
+    void testGetPortfolioSummary() {
+        // User registration and orders happen in their own transactions via TradeService
+        String testUserID = "summarytest" + System.currentTimeMillis();
+        tradeService.register(testUserID, testPassword, "Summary Test User", "123 Summary St",
+                             "summary@example.com", "1234-5678-9012-3456", new BigDecimal("10000.00"));
+
+        // Generate JWT token for authenticated request
+        String jwtToken = TestJwtGenerator.generateToken(testUserID);
+
+        // Buy some stocks to create holdings
+        tradeService.buy(testUserID, "PORT1", 10.0, 0);
+        tradeService.buy(testUserID, "PORT2", 5.0, 0);
+
+        // Get portfolio summary via REST (requires JWT)
+        given()
+            .header("Authorization", "Bearer " + jwtToken)
+            .when().get("/api/v1/portfolio/summary")
+            .then()
+                .statusCode(200)
+                .body("accountID", notNullValue())
+                .body("balance", notNullValue())
+                .body("holdingsValue", notNullValue())
+                .body("totalValue", notNullValue())
+                .body("gain", notNullValue())
+                .body("gainPercent", notNullValue())
+                .body("numberOfHoldings", is(2));
     }
 
     @Test
@@ -129,14 +155,18 @@ class PortfolioResourceTest {
         tradeService.register(testUserID, testPassword, "Get Holding User", "123 Portfolio St",
                              "portfolio@example.com", "1234-5678-9012-3456", new BigDecimal("10000.00"));
 
+        // Generate JWT token for authenticated request
+        String jwtToken = TestJwtGenerator.generateToken(testUserID);
+
         // Buy stock to create a holding
         tradeService.buy(testUserID, "PORT1", 8.0, 0);
 
         // Get the holding ID
         Integer holdingID = tradeService.getHoldings(testUserID).get(0).getHoldingID();
 
-        // Get single holding via REST
+        // Get single holding via REST (requires JWT)
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .when().get("/api/v1/portfolio/" + holdingID)
             .then()
                 .statusCode(200)
@@ -148,7 +178,9 @@ class PortfolioResourceTest {
 
     @Test
     void testGetHoldingNotFound() {
+        String jwtToken = TestJwtGenerator.generateToken("testuser");
         given()
+            .header("Authorization", "Bearer " + jwtToken)
             .when().get("/api/v1/portfolio/99999")
             .then()
                 .statusCode(404)

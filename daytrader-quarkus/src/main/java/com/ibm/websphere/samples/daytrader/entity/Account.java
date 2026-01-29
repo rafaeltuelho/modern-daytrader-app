@@ -31,7 +31,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.TableGenerator;
+
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
@@ -47,16 +47,8 @@ public class Account implements Serializable {
 
     private static final long serialVersionUID = 8437841265136840545L;
 
-    @TableGenerator(
-        name = "accountIdGen", 
-        table = "KEYGENEJB", 
-        pkColumnName = "KEYNAME", 
-        valueColumnName = "KEYVAL", 
-        pkColumnValue = "account", 
-        allocationSize = 1000
-    )
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "accountIdGen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ACCOUNTID", nullable = false)
     private Integer accountID;
 

@@ -16,16 +16,21 @@
 package com.ibm.websphere.samples.daytrader.rest;
 
 import com.ibm.websphere.samples.daytrader.dto.AccountDTO;
+import com.ibm.websphere.samples.daytrader.dto.LoginResponseDTO;
+import com.ibm.websphere.samples.daytrader.service.JwtService;
 import com.ibm.websphere.samples.daytrader.service.TradeService;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -48,14 +53,53 @@ public class AuthResource {
     @Inject
     TradeService tradeService;
 
+    @Inject
+    JwtService jwtService;
+
+    @Inject
+    JsonWebToken jwt;
+
+    @GET
+    @Path("/me")
+    @RolesAllowed({"Trader", "User"})
+    @Operation(summary = "Get current user", description = "Returns the currently authenticated user's account information")
+    @APIResponses({
+        @APIResponse(
+            responseCode = "200",
+            description = "User information retrieved successfully",
+            content = @Content(schema = @Schema(implementation = AccountDTO.class))
+        ),
+        @APIResponse(
+            responseCode = "401",
+            description = "User not authenticated"
+        )
+    })
+    public Response getCurrentUser() {
+        String userID = jwt.getSubject();
+        if (userID == null || userID.isBlank()) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(new QuoteResource.ErrorResponse("User not authenticated"))
+                    .build();
+        }
+
+        try {
+            AccountDTO account = tradeService.getAccountDataByUserID(userID);
+            return Response.ok(account).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(new QuoteResource.ErrorResponse(e.getMessage()))
+                    .build();
+        }
+    }
+
     @POST
     @Path("/login")
-    @Operation(summary = "Login user", description = "Authenticates a user and returns account information")
+    @Operation(summary = "Login user", description = "Authenticates a user and returns account information with JWT token")
     @APIResponses({
         @APIResponse(
             responseCode = "200",
             description = "Login successful",
-            content = @Content(schema = @Schema(implementation = AccountDTO.class))
+            content = @Content(schema = @Schema(implementation = LoginResponseDTO.class))
         ),
         @APIResponse(
             responseCode = "401",
@@ -80,8 +124,16 @@ public class AuthResource {
         }
 
         try {
+            // Authenticate user
             AccountDTO account = tradeService.login(request.userID, request.password);
-            return Response.ok(account).build();
+
+            // Generate JWT token
+            String token = jwtService.generateTraderToken(request.userID);
+            long expiresIn = jwtService.getTokenLifespan();
+
+            // Return login response with token
+            LoginResponseDTO loginResponse = new LoginResponseDTO(account, token, expiresIn);
+            return Response.ok(loginResponse).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity(new QuoteResource.ErrorResponse(e.getMessage()))

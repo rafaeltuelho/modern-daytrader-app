@@ -63,3 +63,25 @@ entityManager.createNativeQuery(
 - Service tests: 26 (TradeService) + 4 (MarketSummaryService)
 - REST tests: ~28
 
+### Frontend Implementation (2026-01-29)
+
+**Completed Phases:**
+- Phase 1: Project Setup & Foundation (Vite + React 18 + TypeScript + MUI)
+- Phase 2: Core Features (Dashboard, Quotes, Portfolio, Account, Market pages)
+
+**Key Technical Decisions:**
+- React 18 + TypeScript + Vite for build tooling
+- MUI v7 for component library (use `Grid` with `size` prop, not deprecated Grid API)
+- React Query for server state management
+- React Hook Form + Zod for form validation
+- React Router v6 for routing with protected routes
+
+**Security Fix Applied:**
+- Fixed Open Redirect vulnerability (CWE-601) in LoginPage.tsx
+- Solution: Validate redirect path before navigation - only allow internal paths starting with `/` and no protocol indicators
+
+**Remaining Phases:**
+- Phase 3: Trading Features (buy/sell interface, order confirmation)
+- Phase 4: Orders & Account (order history, enhanced account management)
+- Phase 5: Market Summary & Polish (real-time updates, dark mode, accessibility)
+
