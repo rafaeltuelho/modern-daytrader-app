@@ -96,17 +96,17 @@
 ```mermaid
 flowchart LR
   subgraph Client
-    Browser[Browser (JSF/HTML + WebSocket)]
+    Browser["Browser (JSF/HTML + WebSocket)"]
   end
 
-  subgraph Web[daytrader-ee7-web (WAR)]
+  subgraph Web["daytrader-ee7-web (WAR)"]
     TradeServlet[TradeAppServlet]
     ScenarioServlet[TradeScenarioServlet]
     JSF[JSF Pages / Backing Beans]
     WS[WebSocket Endpoints]
   end
 
-  subgraph EJB[daytrader-ee7-ejb (EJB/JPA)]
+  subgraph EJB["daytrader-ee7-ejb (EJB/JPA)"]
     TradeSLSB[TradeSLSBBean]
     MarketSummary[MarketSummarySingleton]
     BrokerMDB[DTBroker3MDB]

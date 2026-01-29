@@ -159,7 +159,7 @@
 ```mermaid
 flowchart LR
   User[End User Browser]
-  SPA[SPA (React/TypeScript)]
+  SPA["SPA (React/TypeScript)"]
   API[Quarkus REST API]
   DB[(Relational Database)]
   Broker[(Message Broker)]
@@ -199,10 +199,10 @@ flowchart LR
 ### 7.3 Backend Component Diagram
 ```mermaid
 flowchart LR
-  ApiLayer[REST Resources (/api/v1/**)]
+  ApiLayer["REST Resources (/api/v1/**)"]
   ServiceLayer[Application Services]
   RepoLayer[Panache Repositories]
-  Entities[JPA/Panache Entities]
+  Entities["JPA/Panache Entities"]
   MsgProd[Reactive Msg Producers]
   MsgCons[Reactive Msg Consumers]
 
