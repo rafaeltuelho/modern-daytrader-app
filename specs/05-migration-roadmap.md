@@ -1,4 +1,4 @@
-# DayTrader7 Modernization Migration Roadmap
+# DayTrader Modernization Migration Roadmap
 Status: Draft v0.1 – subject to review.
 
 ## 1. Migration Strategy Overview
@@ -32,7 +32,7 @@ Status: Draft v0.1 – subject to review.
 - Create Quarkus project(s) aligned with target service boundaries.
 - Configure build (Maven/Gradle) with dev/test/prod profiles and basic CI job.
 - Set up testing stack (JUnit, REST-assured; Testcontainers where feasible).
-- Configure datasource to existing DayTrader7 schema; baseline migrations (Flyway/Liquibase).
+- Configure datasource to existing DayTrader schema; baseline migrations (Flyway/Liquibase).
 - Implement health checks, metrics, structured logging; enable OpenAPI and initial API skeletons.
 ### 3.2 Frontend Foundation
 - Create React + Vite project with TypeScript, Vitest/Jest, ESLint, Prettier, basic CI job.
@@ -125,7 +125,7 @@ Status: Draft v0.1 – subject to review.
 - **Indicative effort per phase** (with above team size): P1=3 weeks, P2=4 weeks, P3=4 weeks, P4=3 weeks, P5=3 weeks.
 
 ## 10. Success Criteria
-- Functional parity with legacy DayTrader7 for agreed feature set.
+- Functional parity with legacy DayTrader for agreed feature set.
 - Performance targets met or exceeded vs. baseline (throughput, latency, error rates).
 - All automated tests green in CI; no critical production defects in first 4 weeks.
 - Security audit passed with no critical findings; major items remediated.
@@ -133,7 +133,7 @@ Status: Draft v0.1 – subject to review.
 - Architecture and user documentation updated and handed over.
 
 ## 11. Dependencies & Blockers
-- Availability/stability of existing DayTrader7 DB and any external market data feeds.
+- Availability/stability of existing DayTrader DB and any external market data feeds.
 - Provisioning of environments, DB instances, messaging, and observability platform.
 - Completion of team training and agreement on coding standards/review process.
 - Timely stakeholder decisions on scope, trade-offs, and decommissioning timelines.

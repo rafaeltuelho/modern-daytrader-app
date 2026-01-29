@@ -65,7 +65,7 @@ export const LoginPage: React.FC = () => {
         <Box sx={{ textAlign: 'center', mb: 4 }}>
           <TrendingUp sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
           <Typography variant="h3" component="h1" gutterBottom fontWeight={700}>
-            DayTrader7
+            DayTrader
           </Typography>
           <Typography variant="body1" color="text.secondary">
             Modern Stock Trading Platform

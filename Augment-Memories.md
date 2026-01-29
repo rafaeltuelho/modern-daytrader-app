@@ -1,6 +1,6 @@
 # Augment Agent Memories
 
-## Project: DayTrader7 Modernization
+## Project: DayTrader Modernization
 
 ### Key Patterns Learned
 

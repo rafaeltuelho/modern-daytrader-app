@@ -1,4 +1,4 @@
-# DayTrader7 – Target Cloud-Native Architecture
+# DayTrader – Target Cloud-Native Architecture
 
 ## 1. Architecture Overview
 - The target architecture separates the UI (SPA) from the backend (Quarkus REST API) and shared infrastructure services.

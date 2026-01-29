@@ -98,7 +98,7 @@ export const AppShell: React.FC<AppShellProps> = ({ toggleTheme, isDarkMode }) =
     <Box>
       <Toolbar>
         <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 700 }}>
-          DayTrader7
+          DayTrader
         </Typography>
       </Toolbar>
       <Divider />
@@ -139,7 +139,7 @@ export const AppShell: React.FC<AppShellProps> = ({ toggleTheme, isDarkMode }) =
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            {navItems.find((item) => item.path === location.pathname)?.text || 'DayTrader7'}
+            {navItems.find((item) => item.path === location.pathname)?.text || 'DayTrader'}
           </Typography>
           <IconButton color="inherit" onClick={toggleTheme} sx={{ mr: 1 }}>
             {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}

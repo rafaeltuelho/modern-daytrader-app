@@ -1,9 +1,9 @@
-# DayTrader7 Frontend - Quick Start Guide
+# DayTrader Frontend - Quick Start Guide
 
 ## Prerequisites
 
 1. **Node.js 18+** installed
-2. **DayTrader7 Quarkus backend** running on `http://localhost:8080`
+2. **DayTrader Quarkus backend** running on `http://localhost:8080`
 
 ## Installation & Setup
 

@@ -1,4 +1,4 @@
-// Core domain types for DayTrader7 API
+// Core domain types for DayTrader API
 
 // User type matches backend AccountDTO response
 export interface User {

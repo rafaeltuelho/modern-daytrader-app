@@ -1,7 +1,7 @@
-# DayTrader7 Frontend Test Suite
+# DayTrader Frontend Test Suite
 
 ## Overview
-Comprehensive test suite for the DayTrader7 React frontend application using Vitest, React Testing Library, and MSW (Mock Service Worker).
+Comprehensive test suite for the DayTrader React frontend application using Vitest, React Testing Library, and MSW (Mock Service Worker).
 
 ## Test Infrastructure
 

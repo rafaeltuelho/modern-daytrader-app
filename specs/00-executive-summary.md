@@ -1,7 +1,7 @@
-# DayTrader7 Modernization – Executive Summary
+# DayTrader Modernization – Executive Summary
 
 ## 1. Project Overview
-- DayTrader7 is a Java EE 7 benchmark trading application originally developed by IBM as a sample for WebSphere Liberty.
+- DayTrader is a Java EE 7 benchmark trading application originally developed by IBM as a sample for WebSphere Liberty.
 - It simulates an online brokerage: user accounts, portfolios, stock quotes, buy/sell orders, and market summaries.
 - The primary purpose here is to serve as a realistic modernization candidate from a traditional Java EE monolith to a cloud-native architecture.
 

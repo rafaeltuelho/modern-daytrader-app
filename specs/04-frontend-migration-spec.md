@@ -1,4 +1,4 @@
-# DayTrader7 Frontend Migration Specification (React SPA)
+# DayTrader Frontend Migration Specification (React SPA)
 
 ## Phase Overview: Frontend Migration (Phase 4)
 - **Objectives**: Replace JSF/Servlet-based UI with a modern React + TypeScript SPA consuming Quarkus REST APIs, preserving all functional flows (auth, trading, portfolio, market) while improving UX, performance, and testability.
@@ -42,7 +42,7 @@
 ## 2. Technology Stack
 - **UI Framework**: React 18+ with TypeScript.
 - **Build Tooling**: Vite (fast dev server, optimized production builds, env handling via `import.meta.env`).
-- **Styling**: Material UI (MUI) as primary component library; custom theme for DayTrader7 branding. Tailwind may be used selectively for utility-first layout if team prefers, but MUI components and theming are canonical.
+- **Styling**: Material UI (MUI) as primary component library; custom theme for DayTrader branding. Tailwind may be used selectively for utility-first layout if team prefers, but MUI components and theming are canonical.
 - **HTTP Client**: Native `fetch` wrapped by a small utility plus **React Query** for data fetching, caching, and synchronization.
 - **State Management**: React Query for server state; React Context + hooks for auth/session and UI preferences (theme, layout). Introduce Redux Toolkit only if future complexity requires it.
 - **Routing**: React Router v6 for SPA routing, nested layouts, and protected routes.
@@ -212,7 +212,7 @@ For each screen, we map current JSF/Servlet artifacts to React routes and featur
 
 ## 10. UI/UX Improvements
 - **Responsive Design**: Mobile-first layout with breakpoints suitable for dashboards and tables; horizontal scrolling or stacked cards for small screens.
-- **Consistency & Theming**: Single MUI theme (colors, typography, spacing) reflecting DayTrader7 brand; shared design tokens for spacing and elevation.
+- **Consistency & Theming**: Single MUI theme (colors, typography, spacing) reflecting DayTrader brand; shared design tokens for spacing and elevation.
 - **Accessibility (a11y)**: Semantic HTML for tables/forms, ARIA labels for interactive controls, focus management for modals and dialogs, contrast-compliant palette.
 - **Dark Mode Support**: Theme toggle persisted in user preferences; MUI theme variants for light/dark with minimal overrides.
 - **Usability Enhancements**: Clear error messaging, optimistic updates where safe (e.g., profile edits), and progress indicators for long-running operations.

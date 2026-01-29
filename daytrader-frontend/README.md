@@ -1,6 +1,6 @@
-# DayTrader7 Frontend
+# DayTrader Frontend
 
-Modern fintech-style React SPA frontend for the DayTrader7 stock trading application.
+Modern fintech-style React SPA frontend for the DayTrader stock trading application.
 
 ## Tech Stack
 
@@ -33,7 +33,7 @@ src/
 ### Prerequisites
 
 - Node.js 18+ and npm
-- DayTrader7 Quarkus backend running on `http://localhost:8080`
+- DayTrader Quarkus backend running on `http://localhost:8080`
 
 ### Installation
 
@@ -142,5 +142,5 @@ VITE_WS_BASE_URL=ws://localhost:8080/ws
 
 ## License
 
-Same as DayTrader7 parent project
+Same as DayTrader parent project
 

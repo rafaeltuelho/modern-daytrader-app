@@ -1,6 +1,6 @@
-# DayTrader7 Backend Migration Specification – Backend (03)
+# DayTrader Backend Migration Specification – Backend (03)
 
-This document describes the backend migration of DayTrader7 from Java EE 7 (EJB/JMS/Servlet/JSF) to Quarkus.
+This document describes the backend migration of DayTrader from Java EE 7 (EJB/JMS/Servlet/JSF) to Quarkus.
 
 ## 0. Objectives, Approach, Dependencies
 

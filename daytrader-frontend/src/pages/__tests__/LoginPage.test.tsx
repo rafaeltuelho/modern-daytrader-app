@@ -42,7 +42,7 @@ describe('LoginPage', () => {
   it('renders login form', () => {
     render(<LoginPage />);
 
-    expect(screen.getByText('DayTrader7')).toBeInTheDocument();
+    expect(screen.getByText('DayTrader')).toBeInTheDocument();
     // "Sign In" appears as both heading and button, use getAllByText
     expect(screen.getAllByText('Sign In').length).toBeGreaterThan(0);
     expect(screen.getByLabelText(/user id/i)).toBeInTheDocument();

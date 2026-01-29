@@ -1,7 +1,7 @@
-# DayTrader7 – Current Architecture
+# DayTrader – Current Architecture
 
 ## 1. System Overview and Purpose
-- DayTrader7 is a Java EE 7 sample application that models an online brokerage platform.
+- DayTrader is a Java EE 7 sample application that models an online brokerage platform.
 - Major capabilities: user registration and profile management, account and portfolio views, stock quote lookup, buy/sell/cancel order processing, and market summary dashboards.
 - The application is implemented as a single EAR deployed to WebSphere Liberty, using in-process EJB calls, container-managed transactions, and JPA for persistence.
 - It is designed for benchmark and demo usage, but the architecture and domain model resemble a real brokerage backend, making it a realistic modernization candidate.

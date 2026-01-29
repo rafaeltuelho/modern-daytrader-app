@@ -1,16 +1,16 @@
 # sample.daytrader7 [![Build Status](https://travis-ci.org/WASdev/sample.daytrader7.svg?branch=master)](https://travis-ci.org/WASdev/sample.daytrader7)
 
-# DayTrader7: Cloud-Native Stock Trading Platform
+# DayTrader: Cloud-Native Stock Trading Platform
 
 ## Overview
 
-DayTrader 7 is a comprehensive benchmark and performance sample application built around the paradigm of an online stock trading system. The application allows users to login, view their portfolio, lookup stock quotes, and buy or sell stock shares. With the aid of a Web-based load driver such as Apache JMeter, the real-world workload provided by DayTrader can be used to measure and compare the performance of Java Platform, Enterprise Edition (Java EE) application servers offered by a variety of vendors. In addition to the full workload, the application also contains a set of primitives used for functional and performance testing of various Java EE components and common design patterns.
+DayTrader is a comprehensive benchmark and performance sample application built around the paradigm of an online stock trading system. The application allows users to login, view their portfolio, lookup stock quotes, and buy or sell stock shares. With the aid of a Web-based load driver such as Apache JMeter, the real-world workload provided by DayTrader can be used to measure and compare the performance of Java Platform, Enterprise Edition (Java EE) application servers offered by a variety of vendors. In addition to the full workload, the application also contains a set of primitives used for functional and performance testing of various Java EE components and common design patterns.
 
 DayTrader is an end-to-end benchmark and performance sample application. It provides a real world Java EE workload. DayTrader's original design spans Java EE 7, including the new WebSockets specification. Other Java EE features include JSPs, Servlets, EJBs, JPA, JDBC, JSF, CDI, Bean Validation, JSON, JMS, MDBs, and transactions (synchronous and asynchronous/2-phase commit).
 
 ## Modernization Initiative
 
-DayTrader7 has been modernized from a traditional Java EE7 application running on WebSphere Liberty to a cloud-native architecture with a Quarkus backend and modern React SPA frontend. This modernization delivers significant improvements including faster startup times (sub-second cold starts), reduced memory footprint, containerized deployment, and a contemporary user experience with a responsive Material UI-based interface.
+DayTrader has been modernized from a traditional Java EE7 application running on WebSphere Liberty to a cloud-native architecture with a Quarkus backend and modern React SPA frontend. This modernization delivers significant improvements including faster startup times (sub-second cold starts), reduced memory footprint, containerized deployment, and a contemporary user experience with a responsive Material UI-based interface.
 
 ## Project Structure
 
