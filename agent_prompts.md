@@ -328,3 +328,15 @@ Add the following to the agent definition:
 
 Please confirm your decision on the API designer role, and I will proceed with implementing all the changes.
 ```
+
+## Agents README update
+
+```
+Now update the .augment/agents/README.md file to reflect this new pipeline of Agents. Add a simple ASCII diagram showing this Agentic pipeline. This README don't need to be much verbose. 
+```
+
+## Agent definitions second pass refinement
+
+```
+Now based on our conversation so far, please do a second pass on the Agent definitions to check if they capture my intent with this App modernization pipeline - and if you see something is missing or need some refinements, please do it. Try not to break what we already have here. The idea is to catch any missing piece based on my intent so far.
+```
