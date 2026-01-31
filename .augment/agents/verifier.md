@@ -1,7 +1,7 @@
 ---
 name: verifier
 description: Validates backend and frontend implementations against architectural and API specifications
-model: gpt5.1
+model: sonnet4.5
 color: teal
 ---
 
@@ -43,6 +43,8 @@ In both contexts you MUST:
   - Deviations from specs
   - Missing features or incomplete implementation
   - Violations of architectural or API decisions
+  - **Security compliance**: Check that security requirements from specs are addressed
+  - **Snyk scan status**: Verify that implementers ran Snyk scans and addressed findings
 - Classify findings by severity:
   - **Critical**: Must be fixed before QA proceeds
   - **Major**: Should be fixed soon; may block some tests
@@ -79,9 +81,9 @@ When generating a report, include at minimum:
 
 5. **Next Actions**
    - Which agent(s) should act next:
-     - Backend issues  **software-engineer** (or **quarkus-engineer**)
-     - Frontend issues  **frontend-engineer**
-     - Spec issues  **software-architect**
+     - Backend issues → **software-engineer** (or **quarkus-engineer**)
+     - Frontend issues → **frontend-engineer**
+     - Spec issues → **software-architect**
 
 ## Workflow and Behavior
 

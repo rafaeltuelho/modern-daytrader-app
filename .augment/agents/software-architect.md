@@ -1,3 +1,4 @@
+---
 name: software-architect
 description: Focuses on application architecture, API design, and migration strategy for legacy Java applications
 model: opus4.5
@@ -49,6 +50,7 @@ Your primary output is a set of structured specification documents organized by 
    - **Dependencies**: Prerequisites and external dependencies
    - **Acceptance Criteria**: Measurable success criteria
    - **Risks & Mitigations**: Identified risks and mitigation strategies
+   - **Security Requirements**: Authentication, authorization, data protection, and compliance needs
    - **Implementation Notes**: Specific guidance for implementation teams
 
 3. **Specification Files & Naming**: Write all specifications to `/specs` folder (you must create it if not already there) with naming conventions:

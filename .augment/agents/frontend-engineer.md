@@ -106,6 +106,21 @@ When implementing frontend features:
 - [ ] Test keyboard navigation and screen reader support
 - [ ] Document component API and usage examples
 - [ ] Reference specification phases in implementation notes
+- [ ] Run Snyk security scans (see Security Scanning section)
+
+## Security Scanning (Snyk)
+
+Per project rules (`AGENTS.md`), you MUST run security scans on your implementation:
+
+1. **Snyk Code Scanning**: Run `snyk_code_scan` on new or modified first-party code
+   - Fix any identified vulnerabilities before proceeding
+   - Re-scan until clean
+
+2. **Snyk SCA Scanning**: Run `snyk_sca_scan` when adding or updating dependencies (npm packages)
+   - Address dependency vulnerabilities before proceeding
+   - Document any accepted risks in implementation notes
+
+3. **Iteration**: If issues are found, fix them and rescan until no security issues remain
 
 ## Guidelines
 

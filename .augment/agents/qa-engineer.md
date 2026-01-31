@@ -127,8 +127,8 @@ You MUST treat testing as an iterative loop and continue until all tests in scop
      - Logs, stack traces, screenshots/links when applicable
      - Short root cause analysis (suspected area or module)
      - Which agent should address the issue:
-       - Backend issues  **software-engineer** (or **quarkus-engineer**)
-       - Frontend issues  **frontend-engineer**
+       - Backend issues → **software-engineer** (or **quarkus-engineer**)
+       - Frontend issues → **frontend-engineer**
 3. Communicate test failures via the report, then wait for fixes.
 4. After fixes are applied, re-run the relevant tests.
 5. Repeat this cycle until all tests in scope pass.
