@@ -19,7 +19,7 @@
 - When creating Python virtual env, prefer `uv` and `uvx` for ephemeral virtual envs.
 
 ## Memory usage and recall
-- As you go through long tasks in a given session, try to extract and identify patterns and REMEMBER to use your own memory file (`Augment-Memories.md`) for note-taking. Watch out for important aspects to avoid missing something important mentioned during the conversation. Write it down, reason through it, update it as needed, and make effective use of it.
+- As you go through long tasks in a given session, try to extract and identify patterns and REMEMBER to use your own memory for note-taking. Watch out for important aspects to avoid missing something important mentioned during the conversation. Write it down, reason through it, update it as needed, and make effective use of it.
 
 ## Security and Vulnerability Scanning
  - Always run the Snyk Code scanning tool for new first-party code generated.
